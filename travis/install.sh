@@ -6,7 +6,7 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     brew install glide
 fi
 
-glide update
+glide install
 
 function generate {
     go get -u github.com/jteeuwen/go-bindata/...
@@ -56,7 +56,6 @@ case "$1" in
             sudo apt-get install -y nodejs
         fi
         npm install
-        glide install
         # Then install GopherJS and related dependencies
         go get -u github.com/gopherjs/gopherjs
 
