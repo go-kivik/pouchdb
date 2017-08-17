@@ -3,7 +3,7 @@ ignore:
 - github.com/gopherjs/gopherjs
 import:
 - package: github.com/flimzy/kivik
-  version: ^1.0.4
+  version: ^1.0.5
   subpackages:
   - driver
   - driver/pouchdb/bindings
@@ -13,4 +13,7 @@ import:
   version: ^0.2.2
 testImport:
 - package: github.com/flimzy/diff
-  version: ^0.1.1
+  version: ^0.1.2
+- package: github.com/go-kivik/kiviktest
+  subpackages:
+  - kt
