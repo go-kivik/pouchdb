@@ -6,7 +6,6 @@ import:
   version: ^1.0.5
   subpackages:
   - driver
-  - driver/pouchdb/bindings
   - errors
 - package: github.com/gopherjs/jsbuiltin
 - package: github.com/imdario/mergo

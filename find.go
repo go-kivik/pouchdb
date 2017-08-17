@@ -10,8 +10,8 @@ import (
 
 	"github.com/flimzy/kivik"
 	"github.com/flimzy/kivik/driver"
-	"github.com/flimzy/kivik/driver/pouchdb/bindings"
 	"github.com/flimzy/kivik/errors"
+	"github.com/go-kivik/pouchdb/bindings"
 )
 
 var _ driver.Finder = &db{}
