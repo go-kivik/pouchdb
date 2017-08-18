@@ -7,10 +7,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/flimzy/kivik/driver"
-	"github.com/flimzy/kivik/driver/pouchdb/bindings"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
+
+	"github.com/flimzy/kivik/driver"
+	"github.com/go-kivik/pouchdb/bindings"
 )
 
 func (d *db) PutAttachment(ctx context.Context, docID, rev, filename, contentType string, body io.Reader) (newRev string, err error) {

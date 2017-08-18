@@ -3,8 +3,9 @@ package bindings
 import (
 	"testing"
 
-	_ "github.com/flimzy/kivik/driver/pouchdb/bindings/poucherr"
 	"github.com/gopherjs/gopherjs/js"
+
+	_ "github.com/go-kivik/pouchdb/bindings/poucherr"
 )
 
 type statuser interface {

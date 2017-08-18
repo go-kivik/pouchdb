@@ -6,9 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flimzy/kivik/driver/pouchdb/bindings"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
+
+	"github.com/go-kivik/pouchdb/bindings"
 )
 
 type replicationState struct {

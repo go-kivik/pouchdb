@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/flimzy/kivik/driver"
-	"github.com/flimzy/kivik/driver/pouchdb/bindings"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/imdario/mergo"
+
+	"github.com/flimzy/kivik/driver"
+	"github.com/go-kivik/pouchdb/bindings"
 )
 
 type changesFeed struct {

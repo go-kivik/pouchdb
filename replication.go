@@ -5,11 +5,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gopherjs/gopherjs/js"
+
 	"github.com/flimzy/kivik"
 	"github.com/flimzy/kivik/driver"
-	"github.com/flimzy/kivik/driver/pouchdb/bindings"
 	"github.com/flimzy/kivik/errors"
-	"github.com/gopherjs/gopherjs/js"
+	"github.com/go-kivik/pouchdb/bindings"
 )
 
 type replication struct {

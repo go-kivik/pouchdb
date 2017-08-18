@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/gopherjs/gopherjs/js"
+
 	"github.com/flimzy/kivik/driver"
 	"github.com/flimzy/kivik/errors"
-	"github.com/gopherjs/gopherjs/js"
 )
 
 type bulkResult struct {
