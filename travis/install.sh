@@ -6,7 +6,7 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     brew install glide
 fi
 
-glide install
+glide update
 
 function generate {
     go get -u github.com/jteeuwen/go-bindata/...

@@ -10,9 +10,9 @@ import:
 - package: github.com/gopherjs/jsbuiltin
 - package: github.com/imdario/mergo
   version: ^0.2.2
-testImport:
 - package: github.com/flimzy/diff
   version: ^0.1.2
+testImport:
 - package: github.com/go-kivik/kiviktest
   subpackages:
   - kt
