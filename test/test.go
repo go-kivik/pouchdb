@@ -23,8 +23,6 @@ func init() {
 // RegisterPouchDBSuites registers the PouchDB test suites.
 func RegisterPouchDBSuites() {
 	kiviktest.RegisterSuite(kiviktest.SuitePouchLocal, kt.SuiteConfig{
-		"db": map[string]interface{}{"db": js.Global.Call("require", "memdown")},
-
 		"PreCleanup.skip": true,
 
 		// Features which are not supported by PouchDB
