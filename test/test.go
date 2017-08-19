@@ -19,8 +19,6 @@ func init() {
 		"db": js.Global.Call("require", "memdown"),
 	})
 	js.Global.Set("PouchDB", memPouch)
-
-	RegisterPouchDBSuites()
 }
 
 // RegisterPouchDBSuites registers the PouchDB test suites.

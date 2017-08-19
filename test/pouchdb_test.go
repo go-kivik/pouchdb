@@ -8,6 +8,10 @@ import (
 	_ "github.com/go-kivik/pouchdb"
 )
 
+func init() {
+	RegisterPouchDBSuites()
+}
+
 func TestPouchLocal(t *testing.T) {
 	PouchLocalTest(t)
 }
