@@ -10,7 +10,6 @@ import (
 	"github.com/flimzy/kivik"
 	"github.com/go-kivik/kiviktest"
 	"github.com/go-kivik/kiviktest/kt"
-	_ "github.com/go-kivik/pouchdb" // The PouchDB driver we're actually testing
 	"github.com/gopherjs/gopherjs/js"
 )
 
