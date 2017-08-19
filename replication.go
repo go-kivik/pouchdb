@@ -114,8 +114,9 @@ func replicationEndpoint(dsn string, object interface{}) (name string, obj inter
 	}
 	switch t := object.(type) {
 	case *js.Object:
+		tx := object.(*js.Object) // https://github.com/gopherjs/gopherjs/issues/682
 		// Assume it's a raw PouchDB object
-		return t.Get("name").String(), t, nil
+		return tx.Get("name").String(), tx, nil
 	case *bindings.DB:
 		// Unwrap the bare object
 		return t.Object.Get("name").String(), t.Object, nil
