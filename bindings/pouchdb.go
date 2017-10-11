@@ -11,7 +11,6 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
-	"honnef.co/go/js/console"
 
 	"github.com/flimzy/kivik"
 	"github.com/flimzy/kivik/errors"
@@ -183,7 +182,6 @@ func (db *DB) AllDocs(ctx context.Context, options map[string]interface{}) (*js.
 // Query queries a map/reduce function.
 func (db *DB) Query(ctx context.Context, ddoc, view string, options map[string]interface{}) (*js.Object, error) {
 	o := setTimeout(ctx, options)
-	console.Log(o)
 	return callBack(ctx, db, "query", ddoc+"/"+view, o)
 }
 
