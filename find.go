@@ -128,3 +128,37 @@ func (r *findRows) Next(row *driver.Row) (err error) {
 	row.Doc = json.RawMessage(jsJSON.Call("stringify", next).String())
 	return nil
 }
+
+type queryPlan struct {
+	DBName   string                 `json:"dbname"`
+	Index    map[string]interface{} `json:"index"`
+	Selector map[string]interface{} `json:"selector"`
+	Options  map[string]interface{} `json:"opts"`
+	Limit    int64                  `json:"limit"`
+	Skip     int64                  `json:"skip"`
+	Fields   []interface{}          `json:"fields"`
+	Range    map[string]interface{} `json:"range"`
+}
+
+func (d *db) Explain(ctx context.Context, query interface{}) (*driver.QueryPlan, error) {
+	result, err := d.db.Explain(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	planJSON := js.Global.Get("JSON").Call("stringify", result).String()
+	var plan queryPlan
+	if err := json.Unmarshal([]byte(planJSON), &plan); err != nil {
+		return nil, err
+	}
+	return &driver.QueryPlan{
+		DBName:   plan.DBName,
+		Index:    plan.Index,
+		Selector: plan.Selector,
+		Options:  plan.Options,
+		Limit:    plan.Limit,
+		Skip:     plan.Skip,
+		Fields:   plan.Fields,
+		Range:    plan.Range,
+	}, nil
+
+}
