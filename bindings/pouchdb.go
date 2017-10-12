@@ -181,7 +181,8 @@ func (db *DB) AllDocs(ctx context.Context, options map[string]interface{}) (*js.
 
 // Query queries a map/reduce function.
 func (db *DB) Query(ctx context.Context, ddoc, view string, options map[string]interface{}) (*js.Object, error) {
-	return callBack(ctx, db, "query", ddoc+"/"+view, setTimeout(ctx, options))
+	o := setTimeout(ctx, options)
+	return callBack(ctx, db, "query", ddoc+"/"+view, o)
 }
 
 var findPluginNotLoaded = errors.Status(kivik.StatusNotImplemented, "kivik: pouchdb-find plugin not loaded")
@@ -355,4 +356,18 @@ const (
 func (p *PouchDB) Replicate(source, target interface{}, options map[string]interface{}) (result *js.Object, err error) {
 	defer RecoverError(&err)
 	return p.Call("replicate", source, target, options), nil
+}
+
+// Explain the query plan for a given query
+//
+// See https://pouchdb.com/api.html#explain_index
+func (db *DB) Explain(ctx context.Context, query interface{}) (*js.Object, error) {
+	if jsbuiltin.TypeOf(db.Object.Get("find")) != jsbuiltin.TypeFunction {
+		return nil, findPluginNotLoaded
+	}
+	queryObj, err := Objectify(query)
+	if err != nil {
+		return nil, err
+	}
+	return callBack(ctx, db, "explain", queryObj)
 }
