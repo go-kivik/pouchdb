@@ -107,7 +107,7 @@ func (d *db) CompactView(_ context.Context, _ string) error {
 
 func (d *db) ViewCleanup(_ context.Context) error {
 	d.compacting = true
-	go func() {
+	go func() { // FIXME: #14
 		defer func() { d.compacting = false }()
 		if err := d.db.ViewCleanup(); err != nil {
 			fmt.Fprintf(os.Stderr, "view cleanup failed: %s\n", err)

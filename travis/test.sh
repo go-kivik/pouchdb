@@ -3,8 +3,7 @@ set -euC
 
 if [ "${TRAVIS_OS_NAME:-}" == "osx" ]; then
     # We don't have docker in OSX, so skip these tests
-    unset KIVIK_TEST_DSN_COUCH16
-    unset KIVIK_TEST_DSN_COUCH20
+    unset KIVIK_TEST_DSN_COUCH21
 fi
 
 function join_list {
@@ -14,7 +13,6 @@ function join_list {
 
 case "$1" in
     "standard")
-        unset KIVIK_TEST_DSN_COUCH16
         gopherjs test $(go list ./... | grep -v /vendor/ | grep -Ev 'kivik/(serve|auth|proxy)')
     ;;
     "linter")

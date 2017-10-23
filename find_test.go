@@ -82,7 +82,7 @@ func TestExplain(t *testing.T) {
 					"use_index": []interface{}{},
 				},
 				Selector: map[string]interface{}{"_id": map[string]interface{}{"$eq": "foo"}},
-				Fields:   nil,
+				Fields:   []interface{}{},
 				Range:    map[string]interface{}{},
 			},
 		},

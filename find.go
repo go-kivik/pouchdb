@@ -136,8 +136,24 @@ type queryPlan struct {
 	Options  map[string]interface{} `json:"opts"`
 	Limit    int64                  `json:"limit"`
 	Skip     int64                  `json:"skip"`
-	Fields   []interface{}          `json:"fields"`
+	Fields   fields                 `json:"fields"`
 	Range    map[string]interface{} `json:"range"`
+}
+
+type fields []interface{}
+
+func (f *fields) UnmarshalJSON(data []byte) error {
+	if string(data) == `"all_fields"` {
+		return nil
+	}
+	var i []interface{}
+	if err := json.Unmarshal(data, &i); err != nil {
+		return err
+	}
+	newFields := make([]interface{}, len(i))
+	copy(newFields, i)
+	*f = newFields
+	return nil
 }
 
 func (d *db) Explain(ctx context.Context, query interface{}) (*driver.QueryPlan, error) {
