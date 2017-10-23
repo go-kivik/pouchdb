@@ -60,6 +60,7 @@ func RegisterPouchDBSuites() {
 				"sort":      map[string]interface{}{},
 				"use_index": []interface{}{},
 			},
+			Fields: []interface{}{},
 			Range: map[string]interface{}{
 				"start_key": nil,
 			},
@@ -155,11 +156,72 @@ func RegisterPouchDBSuites() {
 		"AllDocs/RW/group/NoAuth/WithDocs/UpdateSeq.skip":    true,
 		"AllDocs/RW/group/NoAuth/WithoutDocs/UpdateSeq.skip": true,
 
-		"Find.skip":        true, // Find doesn't work with CouchDB 1.6, which we use for these tests
-		"Explain.skip":     true, // Find does't work with CouchDB 1.6, which we use for these tests
-		"CreateIndex.skip": true, // Find doesn't work with CouchDB 1.6, which we use for these tests
-		"GetIndexes.skip":  true, // Find doesn't work with CouchDB 1.6, which we use for these tests
-		"DeleteIndex.skip": true, // Find doesn't work with CouchDB 1.6, which we use for these tests
+		"Find.databases":                       []string{"chicken", "_duck"},
+		"Find/Admin/chicken.status":            kivik.StatusNotFound,
+		"Find/Admin/_duck.status":              kivik.StatusNotFound,
+		"Find/NoAuth/chicken.status":           kivik.StatusNotFound,
+		"Find/NoAuth/_duck.status":             kivik.StatusUnauthorized,
+		"Find/RW/group/Admin/Warning.warning":  "no matching index found, create an index to optimize query time",
+		"Find/RW/group/NoAuth/Warning.warning": "no matching index found, create an index to optimize query time",
+
+		"Explain.databases":             []string{"chicken", "_duck"},
+		"Explain/Admin/chicken.status":  kivik.StatusNotFound,
+		"Explain/Admin/_duck.status":    kivik.StatusNotFound,
+		"Explain/NoAuth/chicken.status": kivik.StatusNotFound,
+		"Explain/NoAuth/_duck.status":   kivik.StatusUnauthorized,
+		"Explain.plan": &kivik.QueryPlan{
+			Index: map[string]interface{}{
+				"ddoc": nil,
+				"name": "_all_docs",
+				"type": "special",
+				"def":  map[string]interface{}{"fields": []interface{}{map[string]string{"_id": "asc"}}},
+			},
+			Selector: map[string]interface{}{"_id": map[string]interface{}{"$gt": nil}},
+			Options: map[string]interface{}{
+				"bookmark":  "nil",
+				"conflicts": false,
+				"r":         []int{49},
+				"sort":      map[string]interface{}{},
+				"use_index": []interface{}{},
+				"stable":    false,
+				"stale":     false,
+				"update":    true,
+				"skip":      0,
+				"limit":     25,
+				"fields":    "all_fields",
+			},
+			Fields: []interface{}{},
+			Range: map[string]interface{}{
+				"start_key": nil,
+				"end_key":   "\xef\xbf\xbd",
+			},
+			Limit: 25,
+		},
+
+		"CreateIndex/RW/Admin/group/EmptyIndex.status":    kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/BlankIndex.status":    kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/InvalidIndex.status":  kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/NilIndex.status":      kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/InvalidJSON.status":   kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/EmptyIndex.status":   kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/BlankIndex.status":   kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/InvalidIndex.status": kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/NilIndex.status":     kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/InvalidJSON.status":  kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/Valid.status":        kivik.StatusInternalServerError, // COUCHDB-3374
+
+		"GetIndexes.databases":                      []string{"_replicator", "_users", "_global_changes"},
+		"GetIndexes/Admin/_replicator.indexes":      []kivik.Index{kt.AllDocsIndex},
+		"GetIndexes/Admin/_users.indexes":           []kivik.Index{kt.AllDocsIndex},
+		"GetIndexes/Admin/_global_changes.indexes":  []kivik.Index{kt.AllDocsIndex},
+		"GetIndexes/NoAuth/_replicator.indexes":     []kivik.Index{kt.AllDocsIndex},
+		"GetIndexes/NoAuth/_users.indexes":          []kivik.Index{kt.AllDocsIndex},
+		"GetIndexes/NoAuth/_global_changes.indexes": []kivik.Index{kt.AllDocsIndex},
+
+		"DeleteIndex/RW/Admin/group/NotFoundDdoc.status":  kivik.StatusNotFound,
+		"DeleteIndex/RW/Admin/group/NotFoundName.status":  kivik.StatusNotFound,
+		"DeleteIndex/RW/NoAuth/group/NotFoundDdoc.status": kivik.StatusNotFound,
+		"DeleteIndex/RW/NoAuth/group/NotFoundName.status": kivik.StatusNotFound,
 
 		"Query/RW/group/Admin/WithDocs/UpdateSeq.skip":  true,
 		"Query/RW/group/NoAuth/WithDocs/UpdateSeq.skip": true,
@@ -195,15 +257,15 @@ func RegisterPouchDBSuites() {
 		"GetAttachmentMeta/RW/group/Admin/foo/NotFound.status":  kivik.StatusNotFound,
 		"GetAttachmentMeta/RW/group/NoAuth/foo/NotFound.status": kivik.StatusNotFound,
 
-		"PutAttachment/RW/group/Admin/Conflict.status":         kivik.StatusInternalServerError, // Couch 2.0 bug
-		"PutAttachment/RW/group/NoAuth/Conflict.status":        kivik.StatusInternalServerError, // Couch 2.0 bug
+		"PutAttachment/RW/group/Admin/Conflict.status":         kivik.StatusConflict,
+		"PutAttachment/RW/group/NoAuth/Conflict.status":        kivik.StatusConflict,
 		"PutAttachment/RW/group/NoAuth/UpdateDesignDoc.status": kivik.StatusUnauthorized,
 		"PutAttachment/RW/group/NoAuth/CreateDesignDoc.status": kivik.StatusUnauthorized,
 
 		// "DeleteAttachment/RW/group/Admin/NotFound.status":  kivik.StatusNotFound, // COUCHDB-3362
 		// "DeleteAttachment/RW/group/NoAuth/NotFound.status": kivik.StatusNotFound, // COUCHDB-3362
-		"DeleteAttachment/RW/group/Admin/NoDoc.status":      kivik.StatusInternalServerError, // Couch 2.0 bug
-		"DeleteAttachment/RW/group/NoAuth/NoDoc.status":     kivik.StatusInternalServerError, // Couch 2.0 bug
+		"DeleteAttachment/RW/group/Admin/NoDoc.status":      kivik.StatusConflict,
+		"DeleteAttachment/RW/group/NoAuth/NoDoc.status":     kivik.StatusConflict,
 		"DeleteAttachment/RW/group/NoAuth/DesignDoc.status": kivik.StatusUnauthorized,
 
 		"Put/RW/Admin/group/LeadingUnderscoreInID.status":  kivik.StatusBadRequest,
