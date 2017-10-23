@@ -235,6 +235,8 @@ func RegisterPouchDBSuites() {
 
 		"Query/RW/group/Admin/WithoutDocs/ScanDoc.status":  kivik.StatusBadRequest,
 		"Query/RW/group/NoAuth/WithoutDocs/ScanDoc.status": kivik.StatusBadRequest,
+
+		// "ViewCleanup/RW/NoAuth.status": kivik.StatusUnauthorized, # FIXME: #14
 	})
 }
 
