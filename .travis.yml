@@ -10,7 +10,6 @@ cache:
 language: go
 os:
     - linux
-    - osx
 go:
     - 1.9.x
 addons:
