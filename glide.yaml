@@ -11,7 +11,7 @@ import:
 - package: github.com/imdario/mergo
   version: ^0.2.2
 - package: github.com/flimzy/diff
-  version: ^0.1.2
+  version: ~0.1.2
 testImport:
 - package: github.com/go-kivik/kiviktest
   subpackages:
