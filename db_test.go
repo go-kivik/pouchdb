@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/errors"
-	"github.com/go-kivik/kiviktest/kt"
 	"github.com/gopherjs/gopherjs/js"
+
+	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kiviktest/kt"
 )
 
 func init() {
@@ -33,7 +33,7 @@ func TestPut(t *testing.T) {
 		t.Fatalf("Failed to connect to db: %s", err)
 	}
 	_, err = db.Put(context.Background(), "foo", map[string]string{"_id": "bar"})
-	if errors.StatusCode(err) != kivik.StatusBadRequest {
+	if kivik.StatusCode(err) != kivik.StatusBadRequest {
 		t.Errorf("Expected Bad Request for mismatched IDs, got %s", err)
 	}
 }
