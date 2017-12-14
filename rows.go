@@ -6,7 +6,7 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
-	"github.com/flimzy/kivik/driver"
+	"github.com/go-kivik/kivik/driver"
 	"github.com/go-kivik/pouchdb/bindings"
 )
 

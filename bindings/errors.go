@@ -3,10 +3,11 @@ package bindings
 import (
 	"fmt"
 
-	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/errors"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
+
+	"github.com/go-kivik/kivik"
+	"github.com/go-kivik/kivik/errors"
 )
 
 type pouchError struct {

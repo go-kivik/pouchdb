@@ -7,10 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/flimzy/kivik"
+	"github.com/gopherjs/gopherjs/js"
+
+	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest"
 	"github.com/go-kivik/kiviktest/kt"
-	"github.com/gopherjs/gopherjs/js"
 )
 
 func init() {
