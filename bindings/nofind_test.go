@@ -6,7 +6,7 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
-	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kivik"
 )
 
 func init() {

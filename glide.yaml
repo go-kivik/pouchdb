@@ -2,8 +2,8 @@ package: github.com/go-kivik/pouchdb
 ignore:
 - github.com/gopherjs/gopherjs
 import:
-- package: github.com/flimzy/kivik
-  version: ^1.0.5
+- package: github.com/go-kivik/kivik
+  version: master
   subpackages:
   - driver
   - errors
@@ -14,6 +14,6 @@ import:
   version: ~0.1.2
 testImport:
 - package: github.com/go-kivik/kiviktest
-  version: ^1.1.0
+  version: master
   subpackages:
   - kt
