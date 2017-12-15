@@ -1,9 +1,12 @@
 package pouchdb
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -44,8 +47,12 @@ func (d *db) Query(ctx context.Context, ddoc, view string, options map[string]in
 	}, nil
 }
 
-func (d *db) Get(ctx context.Context, docID string, options map[string]interface{}) (json.RawMessage, error) {
-	return d.db.Get(ctx, docID, options)
+func (d *db) Get(ctx context.Context, docID string, options map[string]interface{}) (int64, io.ReadCloser, error) {
+	doc, err := d.db.Get(ctx, docID, options)
+	if err != nil {
+		return 0, nil, err
+	}
+	return int64(len(doc)), ioutil.NopCloser(bytes.NewReader(doc)), nil
 }
 
 func (d *db) CreateDoc(ctx context.Context, doc interface{}) (docID, rev string, err error) {
