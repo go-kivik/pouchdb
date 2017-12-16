@@ -76,8 +76,8 @@ func RegisterPouchDBSuites() {
 		"Get/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
 		"Get/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
 
-		"Rev/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
-		"Rev/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
+		"GetMeta/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
+		"GetMeta/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
 
 		"Delete/RW/Admin/group/MissingDoc.status":       kivik.StatusNotFound,
 		"Delete/RW/Admin/group/InvalidRevFormat.status": kivik.StatusBadRequest,
@@ -246,8 +246,8 @@ func RegisterPouchDBSuites() {
 		"Get/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
 		"Get/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
 
-		"Rev/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
-		"Rev/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
+		"GetMeta/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
+		"GetMeta/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
 
 		"Delete/RW/Admin/group/MissingDoc.status":        kivik.StatusNotFound,
 		"Delete/RW/Admin/group/InvalidRevFormat.status":  kivik.StatusBadRequest,
