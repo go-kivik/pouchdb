@@ -2,10 +2,6 @@
 set -euC
 set -o xtrace
 
-if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    brew install glide
-fi
-
 glide update
 
 function generate {
@@ -38,15 +34,12 @@ function setup_couch21 {
     curl --silent --fail -o /dev/null -X PUT http://admin:abc123@localhost:6002/_node/nonode@nohost/_config/replicator/update_docs -H 'Content-Type: application/json' -d '"true"' # FIXME: https://github.com/go-kivik/kivik/issues/215
 }
 
-
 case "$1" in
     "standard")
-        if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-            # Install nodejs and dependencies, but only for Linux
-            curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-            sudo apt-get update -qq
-            sudo apt-get install -y nodejs
-        fi
+        # Install nodejs and dependencies, but only for Linux
+        curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+        sudo apt-get update -qq
+        sudo apt-get install -y nodejs
         npm install
         # Then install GopherJS and related dependencies
         go get -u github.com/gopherjs/gopherjs
@@ -69,7 +62,7 @@ case "$1" in
         generate
     ;;
     "linter")
-        go get -u gopkg.in/alecthomas/gometalinter.v1
-        gometalinter.v1 --install
+        go get -u github.com/gopherjs/gopherjs
+        go get -u gopkg.in/alecthomas/gometalinter.v1 && gometalinter.v1 --install
     ;;
 esac

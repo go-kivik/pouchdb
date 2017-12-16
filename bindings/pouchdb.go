@@ -129,8 +129,8 @@ func (db *DB) Info(ctx context.Context) (*DBInfo, error) {
 
 // Put creates a new document or update an existing document.
 // See https://pouchdb.com/api.html#create_document
-func (db *DB) Put(ctx context.Context, doc interface{}) (rev string, err error) {
-	result, err := callBack(ctx, db, "put", doc, setTimeout(ctx, nil))
+func (db *DB) Put(ctx context.Context, doc interface{}, opts map[string]interface{}) (rev string, err error) {
+	result, err := callBack(ctx, db, "put", doc, setTimeout(ctx, opts))
 	if err != nil {
 		return "", err
 	}
@@ -139,8 +139,8 @@ func (db *DB) Put(ctx context.Context, doc interface{}) (rev string, err error) 
 
 // Post creates a new document and lets PouchDB auto-generate the ID.
 // See https://pouchdb.com/api.html#using-dbpost
-func (db *DB) Post(ctx context.Context, doc interface{}) (docID, rev string, err error) {
-	result, err := callBack(ctx, db, "post", doc, setTimeout(ctx, nil))
+func (db *DB) Post(ctx context.Context, doc interface{}, opts map[string]interface{}) (docID, rev string, err error) {
+	result, err := callBack(ctx, db, "post", doc, setTimeout(ctx, opts))
 	if err != nil {
 		return "", "", err
 	}
@@ -160,8 +160,8 @@ func (db *DB) Get(ctx context.Context, docID string, opts map[string]interface{}
 
 // Delete marks a document as deleted.
 // See https://pouchdb.com/api.html#delete_document
-func (db *DB) Delete(ctx context.Context, doc interface{}) (rev string, err error) {
-	result, err := callBack(ctx, db, "remove", doc, setTimeout(ctx, nil))
+func (db *DB) Delete(ctx context.Context, docID, rev string, opts map[string]interface{}) (newRev string, err error) {
+	result, err := callBack(ctx, db, "remove", docID, rev, setTimeout(ctx, opts))
 	if err != nil {
 		return "", err
 	}

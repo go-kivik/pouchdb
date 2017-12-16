@@ -16,17 +16,17 @@ import (
 	"github.com/go-kivik/pouchdb/bindings"
 )
 
-type Driver struct{}
+type pouchDriver struct{}
 
-var _ driver.Driver = &Driver{}
+var _ driver.Driver = &pouchDriver{}
 
 func init() {
-	kivik.Register("pouch", &Driver{})
+	kivik.Register("pouch", &pouchDriver{})
 }
 
 // NewClient returns a PouchDB client handle. Provide a dsn only for remote
 // databases. Otherwise specify ""
-func (d *Driver) NewClient(_ context.Context, dsn string) (driver.Client, error) {
+func (d *pouchDriver) NewClient(_ context.Context, dsn string) (driver.Client, error) {
 	var u *url.URL
 	var auth authenticator
 	var user *url.Userinfo
@@ -69,8 +69,6 @@ type client struct {
 }
 
 var _ driver.Client = &client{}
-
-const optionsDefaultKey = "defaults"
 
 // AllDBs returns the list of all existing databases. This function depends on
 // the pouchdb-all-dbs plugin being loaded.

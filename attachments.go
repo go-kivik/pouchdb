@@ -14,7 +14,7 @@ import (
 	"github.com/go-kivik/pouchdb/bindings"
 )
 
-func (d *db) PutAttachment(ctx context.Context, docID, rev, filename, contentType string, body io.Reader) (newRev string, err error) {
+func (d *db) PutAttachment(ctx context.Context, docID, rev, filename, contentType string, body io.Reader, _ map[string]interface{}) (newRev string, err error) {
 	result, err := d.db.PutAttachment(ctx, docID, filename, rev, body, contentType)
 	if err != nil {
 		return "", err
@@ -22,7 +22,7 @@ func (d *db) PutAttachment(ctx context.Context, docID, rev, filename, contentTyp
 	return result.Get("rev").String(), nil
 }
 
-func (d *db) GetAttachment(ctx context.Context, docID, rev, filename string) (cType string, md5sum driver.MD5sum, body io.ReadCloser, err error) {
+func (d *db) GetAttachment(ctx context.Context, docID, rev, filename string, _ map[string]interface{}) (cType string, md5sum driver.MD5sum, body io.ReadCloser, err error) {
 	result, err := d.fetchAttachment(ctx, docID, rev, filename)
 	if err != nil {
 		return "", driver.MD5sum{}, nil, err
@@ -91,7 +91,7 @@ func (b *blobReader) Close() (err error) {
 	return nil
 }
 
-func (d *db) DeleteAttachment(ctx context.Context, docID, rev, filename string) (newRev string, err error) {
+func (d *db) DeleteAttachment(ctx context.Context, docID, rev, filename string, _ map[string]interface{}) (newRev string, err error) {
 	result, err := d.db.RemoveAttachment(ctx, docID, filename, rev)
 	if err != nil {
 		return "", err

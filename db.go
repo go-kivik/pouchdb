@@ -1,9 +1,12 @@
 package pouchdb
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -44,20 +47,24 @@ func (d *db) Query(ctx context.Context, ddoc, view string, options map[string]in
 	}, nil
 }
 
-func (d *db) Get(ctx context.Context, docID string, options map[string]interface{}) (json.RawMessage, error) {
-	return d.db.Get(ctx, docID, options)
+func (d *db) Get(ctx context.Context, docID string, options map[string]interface{}) (int64, io.ReadCloser, error) {
+	doc, err := d.db.Get(ctx, docID, options)
+	if err != nil {
+		return 0, nil, err
+	}
+	return int64(len(doc)), ioutil.NopCloser(bytes.NewReader(doc)), nil
 }
 
-func (d *db) CreateDoc(ctx context.Context, doc interface{}) (docID, rev string, err error) {
+func (d *db) CreateDoc(ctx context.Context, doc interface{}, options map[string]interface{}) (docID, rev string, err error) {
 	jsonDoc, err := json.Marshal(doc)
 	if err != nil {
 		return "", "", err
 	}
 	jsDoc := js.Global.Get("JSON").Call("parse", string(jsonDoc))
-	return d.db.Post(ctx, jsDoc)
+	return d.db.Post(ctx, jsDoc, options)
 }
 
-func (d *db) Put(ctx context.Context, docID string, doc interface{}) (rev string, err error) {
+func (d *db) Put(ctx context.Context, docID string, doc interface{}, options map[string]interface{}) (rev string, err error) {
 	jsonDoc, err := json.Marshal(doc)
 	if err != nil {
 		return "", err
@@ -69,14 +76,11 @@ func (d *db) Put(ctx context.Context, docID string, doc interface{}) (rev string
 		}
 	}
 	jsDoc.Set("_id", docID)
-	return d.db.Put(ctx, jsDoc)
+	return d.db.Put(ctx, jsDoc, options)
 }
 
-func (d *db) Delete(ctx context.Context, docID, rev string) (newRev string, err error) {
-	return d.db.Delete(ctx, map[string]string{
-		"_id":  docID,
-		"_rev": rev,
-	})
+func (d *db) Delete(ctx context.Context, docID, rev string, options map[string]interface{}) (newRev string, err error) {
+	return d.db.Delete(ctx, docID, rev, options)
 }
 
 func (d *db) Stats(ctx context.Context) (*driver.DBStats, error) {

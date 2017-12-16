@@ -24,13 +24,10 @@ func TestPut(t *testing.T) {
 		return
 	}
 	dbname := kt.TestDBName(t)
-	defer client.DestroyDB(context.Background(), dbname)
-	if err = client.CreateDB(context.Background(), dbname); err != nil {
-		t.Fatalf("Failed to create db: %s", err)
-	}
-	db, err := client.DB(context.Background(), dbname)
+	defer client.DestroyDB(context.Background(), dbname) // nolint: errcheck
+	db, err := client.CreateDB(context.Background(), dbname)
 	if err != nil {
-		t.Fatalf("Failed to connect to db: %s", err)
+		t.Fatalf("Failed to create db: %s", err)
 	}
 	_, err = db.Put(context.Background(), "foo", map[string]string{"_id": "bar"})
 	if kivik.StatusCode(err) != kivik.StatusBadRequest {
