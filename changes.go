@@ -70,7 +70,7 @@ func (d *db) Changes(ctx context.Context, options map[string]interface{}) (drive
 		go func() {
 			defer func() {
 				if r := recover(); r != nil {
-					c.Close()
+					_ = c.Close()
 					if e, ok := r.(error); ok {
 						c.err = e
 					} else {
