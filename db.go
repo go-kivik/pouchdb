@@ -27,6 +27,8 @@ type db struct {
 	compacting bool
 }
 
+var _ driver.DB = &db{}
+
 func (d *db) AllDocs(ctx context.Context, options map[string]interface{}) (driver.Rows, error) {
 	result, err := d.db.AllDocs(ctx, options)
 	if err != nil {

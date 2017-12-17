@@ -14,21 +14,20 @@ import (
 	"github.com/go-kivik/pouchdb/bindings"
 )
 
-func (d *db) PutAttachment(ctx context.Context, docID, rev, filename, contentType string, body io.Reader, _ map[string]interface{}) (newRev string, err error) {
-	result, err := d.db.PutAttachment(ctx, docID, filename, rev, body, contentType)
+func (d *db) PutAttachment(ctx context.Context, docID, rev string, att *driver.Attachment, _ map[string]interface{}) (newRev string, err error) {
+	result, err := d.db.PutAttachment(ctx, docID, att.Filename, rev, att.Content, att.ContentType)
 	if err != nil {
 		return "", err
 	}
 	return result.Get("rev").String(), nil
 }
 
-func (d *db) GetAttachment(ctx context.Context, docID, rev, filename string, _ map[string]interface{}) (cType string, md5sum driver.MD5sum, body io.ReadCloser, err error) {
+func (d *db) GetAttachment(ctx context.Context, docID, rev, filename string, _ map[string]interface{}) (*driver.Attachment, error) {
 	result, err := d.fetchAttachment(ctx, docID, rev, filename)
 	if err != nil {
-		return "", driver.MD5sum{}, nil, err
+		return nil, err
 	}
-	cType, body, err = parseAttachment(result)
-	return
+	return parseAttachment(result)
 }
 
 func (d *db) fetchAttachment(ctx context.Context, docID, rev, filename string) (*js.Object, error) {
@@ -39,18 +38,23 @@ func (d *db) fetchAttachment(ctx context.Context, docID, rev, filename string) (
 	return d.db.GetAttachment(ctx, docID, filename, opts)
 }
 
-func parseAttachment(att *js.Object) (cType string, content io.ReadCloser, err error) {
+func parseAttachment(obj *js.Object) (att *driver.Attachment, err error) {
 	defer bindings.RecoverError(&err)
-	if jsbuiltin.TypeOf(att.Get("write")) == "function" {
+	if jsbuiltin.TypeOf(obj.Get("write")) == "function" {
 		// This looks like a Buffer object; we're in Node.js
-		body := att.Call("toString", "binary").String()
+		body := obj.Call("toString", "binary").String()
 		// It might make sense to wrap the Buffer itself in an io.Reader interface,
 		// but since this is only for testing, I'm taking the lazy way out, even
 		// though it means slurping an extra copy into memory.
-		return "", ioutil.NopCloser(strings.NewReader(body)), nil
+		return &driver.Attachment{
+			Content: ioutil.NopCloser(strings.NewReader(body)),
+		}, nil
 	}
 	// We're in the browser
-	return att.Get("type").String(), &blobReader{Object: att}, nil
+	return &driver.Attachment{
+		ContentType: obj.Get("type").String(),
+		Content:     &blobReader{Object: obj},
+	}, nil
 }
 
 type blobReader struct {
