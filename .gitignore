@@ -2,3 +2,5 @@ pouch__all_dbs__
 /vendor
 /node_modules
 test.*
+glide.lock
+*~
