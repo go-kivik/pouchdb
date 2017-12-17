@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/go-kivik/pouchdb.svg?branch=master)](https://travis-ci.org/go-kivik/pouchdb)  [![GoDoc](https://godoc.org/github.com/go-kivik/pouchdb?status.svg)](http://godoc.org/github.com/go-kivik/pouchdb)
+[![Build Status](https://travis-ci.org/go-kivik/pouchdb.svg?branch=stable1.x)](https://travis-ci.org/go-kivik/pouchdb)
 
 # Kivik PouchDB
 
