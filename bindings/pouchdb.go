@@ -149,13 +149,13 @@ func (db *DB) Post(ctx context.Context, doc interface{}, opts map[string]interfa
 
 // Get fetches the requested document from the database.
 // See https://pouchdb.com/api.html#fetch_document
-func (db *DB) Get(ctx context.Context, docID string, opts map[string]interface{}) (doc []byte, err error) {
+func (db *DB) Get(ctx context.Context, docID string, opts map[string]interface{}) (doc []byte, rev string, err error) {
 	result, err := callBack(ctx, db, "get", docID, setTimeout(ctx, opts))
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	resultJSON := js.Global.Get("JSON").Call("stringify", result).String()
-	return []byte(resultJSON), err
+	return []byte(resultJSON), result.Get("_rev").String(), err
 }
 
 // Delete marks a document as deleted.
