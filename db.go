@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 
@@ -49,12 +48,16 @@ func (d *db) Query(ctx context.Context, ddoc, view string, options map[string]in
 	}, nil
 }
 
-func (d *db) Get(ctx context.Context, docID string, options map[string]interface{}) (int64, io.ReadCloser, error) {
-	doc, err := d.db.Get(ctx, docID, options)
+func (d *db) Get(ctx context.Context, docID string, options map[string]interface{}) (*driver.Document, error) {
+	doc, rev, err := d.db.Get(ctx, docID, options)
 	if err != nil {
-		return 0, nil, err
+		return nil, err
 	}
-	return int64(len(doc)), ioutil.NopCloser(bytes.NewReader(doc)), nil
+	return &driver.Document{
+		ContentLength: int64(len(doc)),
+		Rev:           rev,
+		Body:          ioutil.NopCloser(bytes.NewReader(doc)),
+	}, nil
 }
 
 func (d *db) CreateDoc(ctx context.Context, doc interface{}, options map[string]interface{}) (docID, rev string, err error) {
