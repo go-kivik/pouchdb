@@ -150,7 +150,7 @@ func (c *client) Replicate(_ context.Context, targetDSN, sourceDSN string, optio
 
 func (c *client) GetReplications(_ context.Context, options map[string]interface{}) ([]driver.Replication, error) {
 	for range options {
-		return nil, errors.Status(kivik.StatusBadRequest, "options not yet supported")
+		return nil, errors.Status(kivik.StatusBadAPICall, "options not yet supported")
 	}
 	c.replicationsMU.RLock()
 	defer c.replicationsMU.RUnlock()
