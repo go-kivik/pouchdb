@@ -77,7 +77,7 @@ func (d *db) Put(ctx context.Context, docID string, doc interface{}, options map
 	jsDoc := js.Global.Get("JSON").Call("parse", string(jsonDoc))
 	if id := jsDoc.Get("_id"); id != js.Undefined {
 		if id.String() != docID {
-			return "", errors.Status(kivik.StatusBadRequest, "id argument must match _id field in document")
+			return "", errors.Status(kivik.StatusBadAPICall, "id argument must match _id field in document")
 		}
 	}
 	jsDoc.Set("_id", docID)

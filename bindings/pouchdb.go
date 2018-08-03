@@ -219,7 +219,7 @@ func Objectify(i interface{}) (interface{}, error) {
 	}
 	var x interface{}
 	err := json.Unmarshal(buf, &x)
-	return x, errors.WrapStatus(kivik.StatusBadRequest, err)
+	return x, errors.WrapStatus(kivik.StatusBadAPICall, err)
 }
 
 // Compact compacts the database, and waits for it to complete. This may take
