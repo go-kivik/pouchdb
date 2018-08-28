@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/flimzy/testy"
 	"github.com/gopherjs/gopherjs/js"
 
 	"github.com/go-kivik/kivik"
@@ -30,7 +31,5 @@ func TestPut(t *testing.T) {
 		t.Fatalf("Failed to create db: %s", err)
 	}
 	_, err = db.Put(context.Background(), "foo", map[string]string{"_id": "bar"})
-	if kivik.StatusCode(err) != kivik.StatusBadRequest {
-		t.Errorf("Expected Bad Request for mismatched IDs, got %s", err)
-	}
+	testy.StatusError(t, "id argument must match _id field in document", kivik.StatusBadAPICall, err)
 }

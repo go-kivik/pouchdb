@@ -100,10 +100,10 @@ func RegisterPouchDBSuites() {
 		"Put/RW/Admin/group/Conflict.status":              kivik.StatusConflict,
 
 		"CreateIndex/RW/Admin/group/EmptyIndex.status":   kivik.StatusInternalServerError,
-		"CreateIndex/RW/Admin/group/BlankIndex.status":   kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/BlankIndex.status":   kivik.StatusBadAPICall,
 		"CreateIndex/RW/Admin/group/InvalidIndex.status": kivik.StatusInternalServerError,
 		"CreateIndex/RW/Admin/group/NilIndex.status":     kivik.StatusInternalServerError,
-		"CreateIndex/RW/Admin/group/InvalidJSON.status":  kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/InvalidJSON.status":  kivik.StatusBadAPICall,
 
 		"GetIndexes.databases": []string{},
 
@@ -112,7 +112,7 @@ func RegisterPouchDBSuites() {
 
 		"Replicate.skip": true, // No need to do this for both Local and Remote
 
-		"Query/RW/group/Admin/WithoutDocs/ScanDoc.status": kivik.StatusBadRequest,
+		"Query/RW/group/Admin/WithoutDocs/ScanDoc.status": kivik.StatusBadAPICall,
 	})
 	kiviktest.RegisterSuite(kiviktest.SuitePouchRemote, kt.SuiteConfig{
 		// Features which are not supported by PouchDB
@@ -198,15 +198,15 @@ func RegisterPouchDBSuites() {
 		},
 
 		"CreateIndex/RW/Admin/group/EmptyIndex.status":    kivik.StatusBadRequest,
-		"CreateIndex/RW/Admin/group/BlankIndex.status":    kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/BlankIndex.status":    kivik.StatusBadAPICall,
 		"CreateIndex/RW/Admin/group/InvalidIndex.status":  kivik.StatusBadRequest,
 		"CreateIndex/RW/Admin/group/NilIndex.status":      kivik.StatusBadRequest,
-		"CreateIndex/RW/Admin/group/InvalidJSON.status":   kivik.StatusBadRequest,
+		"CreateIndex/RW/Admin/group/InvalidJSON.status":   kivik.StatusBadAPICall,
 		"CreateIndex/RW/NoAuth/group/EmptyIndex.status":   kivik.StatusBadRequest,
-		"CreateIndex/RW/NoAuth/group/BlankIndex.status":   kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/BlankIndex.status":   kivik.StatusBadAPICall,
 		"CreateIndex/RW/NoAuth/group/InvalidIndex.status": kivik.StatusBadRequest,
 		"CreateIndex/RW/NoAuth/group/NilIndex.status":     kivik.StatusBadRequest,
-		"CreateIndex/RW/NoAuth/group/InvalidJSON.status":  kivik.StatusBadRequest,
+		"CreateIndex/RW/NoAuth/group/InvalidJSON.status":  kivik.StatusBadAPICall,
 		"CreateIndex/RW/NoAuth/group/Valid.status":        kivik.StatusInternalServerError, // COUCHDB-3374
 
 		"GetIndexes.databases":                     []string{"_replicator", "_users", "_global_changes"},
@@ -308,8 +308,8 @@ func RegisterPouchDBSuites() {
 		"Replicate/RW/NoAuth/group/MissingSource/Results.status": kivik.StatusUnauthorized,
 		"Replicate/RW/NoAuth/group/MissingTarget/Results.status": kivik.StatusUnauthorized,
 
-		"Query/RW/group/Admin/WithoutDocs/ScanDoc.status":  kivik.StatusBadRequest,
-		"Query/RW/group/NoAuth/WithoutDocs/ScanDoc.status": kivik.StatusBadRequest,
+		"Query/RW/group/Admin/WithoutDocs/ScanDoc.status":  kivik.StatusBadAPICall,
+		"Query/RW/group/NoAuth/WithoutDocs/ScanDoc.status": kivik.StatusBadAPICall,
 
 		// "ViewCleanup/RW/NoAuth.status": kivik.StatusUnauthorized, # FIXME: #14
 	})
