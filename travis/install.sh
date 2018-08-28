@@ -40,6 +40,7 @@ case "$1" in
         curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
         sudo apt-get update -qq
         sudo apt-get install -y nodejs
+        cp "$NPM_PROFILE" package.json
         npm install
         # Then install GopherJS and related dependencies
         go get -u github.com/gopherjs/gopherjs
