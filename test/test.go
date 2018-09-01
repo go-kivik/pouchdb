@@ -289,7 +289,11 @@ func RegisterPouchDBSuites() {
 
 		"Replicate.NotFoundDB": func() string {
 			var dsn string
-			for _, env := range []string{"KIVIK_TEST_DSN_COUCH21", "KIVIK_TEST_DSN_COUCH20", "KIVIK_TEST_DSN_COUCH16", "KIVIK_TEST_DSN_CLOUDANT"} {
+			for _, env := range []string{
+				"KIVIK_TESt_DSN_COUCH22", "KIVIK_TEST_DSN_COUCH21",
+				"KIVIK_TEST_DSN_COUCH20", "KIVIK_TEST_DSN_COUCH16",
+				"KIVIK_TEST_DSN_CLOUDANT",
+			} {
 				dsn = os.Getenv(env)
 				if dsn != "" {
 					break
@@ -331,5 +335,5 @@ func PouchLocalTest(t *testing.T) {
 
 // PouchRemoteTest runs the PouchDB tests against a remote CouchDB database.
 func PouchRemoteTest(t *testing.T) {
-	kiviktest.DoTest(kiviktest.SuitePouchRemote, "KIVIK_TEST_DSN_COUCH21", t)
+	kiviktest.DoTest(kiviktest.SuitePouchRemote, "KIVIK_TEST_DSN_COUCH22", t)
 }
