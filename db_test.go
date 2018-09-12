@@ -19,7 +19,7 @@ func init() {
 }
 
 func TestPut(t *testing.T) {
-	client, err := kivik.New(context.Background(), "pouch", "")
+	client, err := kivik.New("pouch", "")
 	if err != nil {
 		t.Errorf("Failed to connect to PouchDB/memdown driver: %s", err)
 		return
