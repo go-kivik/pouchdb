@@ -1,7 +1,6 @@
 package test
 
 import (
-	"context"
 	"net/url"
 	"os"
 	"strings"
@@ -304,9 +303,9 @@ func RegisterPouchDBSuites() {
 			return strings.TrimSuffix(parsed.String(), "/") + "/doesntexist"
 
 		}(),
-		"Replicate.prefix":                                       "none",
-		"Replicate.timeoutSeconds":                               5,
-		"Replicate.mode":                                         "pouchdb",
+		"Replicate.prefix":         "none",
+		"Replicate.timeoutSeconds": 5,
+		"Replicate.mode":           "pouchdb",
 		"Replicate/RW/Admin/group/MissingSource/Results.status":  kivik.StatusUnauthorized,
 		"Replicate/RW/Admin/group/MissingTarget/Results.status":  kivik.StatusUnauthorized,
 		"Replicate/RW/NoAuth/group/MissingSource/Results.status": kivik.StatusUnauthorized,
@@ -321,7 +320,7 @@ func RegisterPouchDBSuites() {
 
 // PouchLocalTest runs the PouchDB tests against a local database.
 func PouchLocalTest(t *testing.T) {
-	client, err := kivik.New(context.Background(), "pouch", "")
+	client, err := kivik.New("pouch", "")
 	if err != nil {
 		t.Errorf("Failed to connect to PouchDB driver: %s", err)
 		return
