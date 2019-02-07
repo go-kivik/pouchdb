@@ -374,3 +374,13 @@ func (db *DB) Explain(ctx context.Context, query interface{}) (*js.Object, error
 	}
 	return callBack(ctx, db, "explain", queryObj)
 }
+
+func (db *DB) Close(ctx context.Context) error {
+	// I'm not sure when DB.close() was added to PouchDB, so guard against
+	// it missing, just in case.
+	if jsbuiltin.TypeOf(db.Object.Get("close")) != jsbuiltin.TypeFunction {
+		return nil
+	}
+	_, err := callBack(ctx, db, "close")
+	return err
+}
