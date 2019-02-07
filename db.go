@@ -27,6 +27,7 @@ type db struct {
 }
 
 var _ driver.DB = &db{}
+var _ driver.DBCloser = &db{}
 
 func (d *db) AllDocs(ctx context.Context, options map[string]interface{}) (driver.Rows, error) {
 	result, err := d.db.AllDocs(ctx, options)
@@ -133,4 +134,8 @@ func (d *db) Security(ctx context.Context) (*driver.Security, error) {
 
 func (d *db) SetSecurity(_ context.Context, _ *driver.Security) error {
 	return securityNotImplemented
+}
+
+func (d *db) Close(ctx context.Context) error {
+	return d.db.Close(ctx)
 }
