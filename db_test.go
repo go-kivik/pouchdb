@@ -26,9 +26,9 @@ func TestPut(t *testing.T) {
 	}
 	dbname := kt.TestDBName(t)
 	defer client.DestroyDB(context.Background(), dbname) // nolint: errcheck
-	db, err := client.CreateDB(context.Background(), dbname)
-	if err != nil {
-		t.Fatalf("Failed to create db: %s", err)
+	db := client.CreateDB(context.Background(), dbname)
+	if e := db.Err(); e != nil {
+		t.Fatalf("Failed to create db: %s", e)
 	}
 	_, err = db.Put(context.Background(), "foo", map[string]string{"_id": "bar"})
 	testy.StatusError(t, "id argument must match _id field in document", kivik.StatusBadAPICall, err)
