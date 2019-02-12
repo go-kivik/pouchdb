@@ -22,20 +22,12 @@ func (d *db) PutAttachment(ctx context.Context, docID, rev string, att *driver.A
 	return result.Get("rev").String(), nil
 }
 
-func (d *db) GetAttachment(ctx context.Context, docID, rev, filename string, _ map[string]interface{}) (*driver.Attachment, error) {
-	result, err := d.fetchAttachment(ctx, docID, rev, filename)
+func (d *db) GetAttachment(ctx context.Context, docID, filename string, opts map[string]interface{}) (*driver.Attachment, error) {
+	result, err := d.db.GetAttachment(ctx, docID, filename, opts)
 	if err != nil {
 		return nil, err
 	}
 	return parseAttachment(result)
-}
-
-func (d *db) fetchAttachment(ctx context.Context, docID, rev, filename string) (*js.Object, error) {
-	var opts map[string]interface{}
-	if rev != "" {
-		opts["rev"] = rev
-	}
-	return d.db.GetAttachment(ctx, docID, filename, opts)
 }
 
 func parseAttachment(obj *js.Object) (att *driver.Attachment, err error) {
