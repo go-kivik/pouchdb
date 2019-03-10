@@ -8,8 +8,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/imdario/mergo"
-
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kivik/driver"
 	"github.com/go-kivik/kivik/errors"
@@ -104,13 +102,13 @@ type Options map[string]interface{}
 func (c *client) options(options ...Options) (Options, error) {
 	o := Options{}
 	for _, defOpts := range c.opts {
-		if err := mergo.MergeWithOverwrite(&o, defOpts); err != nil {
-			return nil, err
+		for k, v := range defOpts {
+			o[k] = v
 		}
 	}
 	for _, opts := range options {
-		if err := mergo.MergeWithOverwrite(&o, opts); err != nil {
-			return nil, err
+		for k, v := range opts {
+			o[k] = v
 		}
 	}
 	return o, nil
