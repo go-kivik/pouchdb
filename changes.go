@@ -7,7 +7,6 @@ import (
 	"io"
 
 	"github.com/gopherjs/gopherjs/js"
-	"github.com/imdario/mergo"
 
 	"github.com/go-kivik/kivik/driver"
 	"github.com/go-kivik/pouchdb/bindings"
@@ -52,8 +51,10 @@ func (d *db) Changes(ctx context.Context, options map[string]interface{}) (drive
 		"live":    true,
 		"timeout": false,
 	}
-	if err := mergo.Merge(&opts, options); err != nil {
-		return nil, err
+	for k, v := range options {
+		if _, ok := opts[k]; !ok {
+			opts[k] = v
+		}
 	}
 	changes, err := d.db.Changes(ctx, opts)
 	if err != nil {
