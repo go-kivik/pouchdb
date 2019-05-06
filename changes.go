@@ -20,6 +20,19 @@ type changesFeed struct {
 
 var _ driver.Changes = &changesFeed{}
 
+func newChangesFeed(changes *js.Object) *changesFeed {
+	feed := make(chan *driver.Change, 32)
+	c := &changesFeed{
+		changes: changes,
+		feed:    feed,
+	}
+
+	changes.Call("on", "change", c.change)
+	changes.Call("on", "complete", c.complete)
+	changes.Call("on", "error", c.error)
+	return c
+}
+
 type changeRow struct {
 	*js.Object
 	ID      string     `js:"id"`
@@ -101,14 +114,5 @@ func (d *db) Changes(ctx context.Context, options map[string]interface{}) (drive
 		return nil, err
 	}
 
-	feed := make(chan *driver.Change, 32)
-	c := &changesFeed{
-		changes: changes,
-		feed:    feed,
-	}
-
-	changes.Call("on", "change", c.change)
-	changes.Call("on", "complete", c.complete)
-	changes.Call("on", "error", c.error)
-	return c, nil
+	return newChangesFeed(changes), nil
 }
