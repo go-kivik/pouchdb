@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"sync"
 
 	"github.com/gopherjs/gopherjs/js"
 
@@ -15,6 +16,7 @@ import (
 type changesFeed struct {
 	changes *js.Object
 	feed    chan *driver.Change
+	errMu   sync.Mutex
 	err     error
 }
 
@@ -42,10 +44,19 @@ type changeRow struct {
 	Deleted bool       `js:"deleted"`
 }
 
+func (c *changesFeed) setErr(err error) {
+	c.errMu.Lock()
+	c.err = err
+	c.errMu.Unlock()
+}
+
 func (c *changesFeed) Next(row *driver.Change) error {
+	c.errMu.Lock()
 	if c.err != nil {
+		c.errMu.Unlock()
 		return c.err
 	}
+	c.errMu.Unlock()
 	newRow, ok := <-c.feed
 	if !ok {
 		return io.EOF
@@ -105,7 +116,7 @@ func (c *changesFeed) complete(info *js.Object) {
 }
 
 func (c *changesFeed) error(e *js.Object) {
-	c.err = bindings.NewPouchError(e)
+	c.setErr(bindings.NewPouchError(e))
 }
 
 func (d *db) Changes(ctx context.Context, options map[string]interface{}) (driver.Changes, error) {
