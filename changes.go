@@ -15,6 +15,7 @@ import (
 
 type changesFeed struct {
 	changes *js.Object
+	ctx     context.Context
 	feed    chan *driver.Change
 	errMu   sync.Mutex
 	err     error
@@ -22,9 +23,10 @@ type changesFeed struct {
 
 var _ driver.Changes = &changesFeed{}
 
-func newChangesFeed(changes *js.Object) *changesFeed {
+func newChangesFeed(ctx context.Context, changes *js.Object) *changesFeed {
 	feed := make(chan *driver.Change, 32)
 	c := &changesFeed{
+		ctx:     ctx,
 		changes: changes,
 		feed:    feed,
 	}
@@ -57,11 +59,18 @@ func (c *changesFeed) Next(row *driver.Change) error {
 		return c.err
 	}
 	c.errMu.Unlock()
-	newRow, ok := <-c.feed
-	if !ok {
-		return io.EOF
+	select {
+	case <-c.ctx.Done():
+		err := c.ctx.Err()
+		c.setErr(err)
+		return err
+	case newRow, ok := <-c.feed:
+		if !ok {
+			c.setErr(io.EOF)
+			return io.EOF
+		}
+		*row = *newRow
 	}
-	*row = *newRow
 	return nil
 }
 
@@ -125,5 +134,5 @@ func (d *db) Changes(ctx context.Context, options map[string]interface{}) (drive
 		return nil, err
 	}
 
-	return newChangesFeed(changes), nil
+	return newChangesFeed(ctx, changes), nil
 }
