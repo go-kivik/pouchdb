@@ -112,6 +112,11 @@ func RegisterPouchDBSuites() {
 		"Replicate.skip": true, // No need to do this for both Local and Remote
 
 		"Query/RW/group/Admin/WithoutDocs/ScanDoc.status": kivik.StatusBadAPICall,
+
+		"Changes/Continuous.options": map[string]interface{}{
+			"live":    true,
+			"timeout": false,
+		},
 	})
 	kiviktest.RegisterSuite(kiviktest.SuitePouchRemote, kt.SuiteConfig{
 		// Features which are not supported by PouchDB
@@ -315,6 +320,11 @@ func RegisterPouchDBSuites() {
 		"Query/RW/group/NoAuth/WithoutDocs/ScanDoc.status": kivik.StatusBadAPICall,
 
 		// "ViewCleanup/RW/NoAuth.status": kivik.StatusUnauthorized, # FIXME: #14
+
+		"Changes/Continuous.options": map[string]interface{}{
+			"live":    true,
+			"timeout": false,
+		},
 	})
 }
 

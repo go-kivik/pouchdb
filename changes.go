@@ -57,16 +57,7 @@ func (c *changesFeed) Pending() int64 {
 }
 
 func (d *db) Changes(ctx context.Context, options map[string]interface{}) (driver.Changes, error) {
-	opts := map[string]interface{}{
-		"live":    true,
-		"timeout": false,
-	}
-	for k, v := range options {
-		if _, ok := opts[k]; !ok {
-			opts[k] = v
-		}
-	}
-	changes, err := d.db.Changes(ctx, opts)
+	changes, err := d.db.Changes(ctx, options)
 	if err != nil {
 		return nil, err
 	}
