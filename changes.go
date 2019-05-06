@@ -14,7 +14,7 @@ import (
 
 type changesFeed struct {
 	changes *js.Object
-	feed    <-chan *driver.Change
+	feed    chan *driver.Change
 	err     error
 }
 
@@ -56,6 +56,45 @@ func (c *changesFeed) Pending() int64 {
 	return 0
 }
 
+func (c *changesFeed) change(change *changeRow) {
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				_ = c.Close()
+				if e, ok := r.(error); ok {
+					c.err = e
+				} else {
+					c.err = fmt.Errorf("%v", r)
+				}
+			}
+		}()
+		changedRevs := make([]string, 0, change.Changes.Length())
+		for i := 0; i < change.Changes.Length(); i++ {
+			changedRevs = append(changedRevs, change.Changes.Index(i).Get("rev").String())
+		}
+		var doc json.RawMessage
+		if change.Doc != js.Undefined {
+			doc = json.RawMessage(js.Global.Get("JSON").Call("stringify", change.Doc).String())
+		}
+		row := &driver.Change{
+			ID:      change.ID,
+			Seq:     change.Seq,
+			Deleted: change.Deleted,
+			Doc:     doc,
+			Changes: changedRevs,
+		}
+		c.feed <- row
+	}()
+}
+
+func (c *changesFeed) complete(info *js.Object) {
+	close(c.feed)
+}
+
+func (c *changesFeed) error(e *js.Object) {
+	c.err = bindings.NewPouchError(e)
+}
+
 func (d *db) Changes(ctx context.Context, options map[string]interface{}) (driver.Changes, error) {
 	changes, err := d.db.Changes(ctx, options)
 	if err != nil {
@@ -68,41 +107,8 @@ func (d *db) Changes(ctx context.Context, options map[string]interface{}) (drive
 		feed:    feed,
 	}
 
-	changes.Call("on", "change", func(change *changeRow) {
-		go func() {
-			defer func() {
-				if r := recover(); r != nil {
-					_ = c.Close()
-					if e, ok := r.(error); ok {
-						c.err = e
-					} else {
-						c.err = fmt.Errorf("%v", r)
-					}
-				}
-			}()
-			changedRevs := make([]string, 0, change.Changes.Length())
-			for i := 0; i < change.Changes.Length(); i++ {
-				changedRevs = append(changedRevs, change.Changes.Index(i).Get("rev").String())
-			}
-			var doc json.RawMessage
-			if change.Doc != js.Undefined {
-				doc = json.RawMessage(js.Global.Get("JSON").Call("stringify", change.Doc).String())
-			}
-			row := &driver.Change{
-				ID:      change.ID,
-				Seq:     change.Seq,
-				Deleted: change.Deleted,
-				Doc:     doc,
-				Changes: changedRevs,
-			}
-			feed <- row
-		}()
-	})
-	changes.Call("on", "complete", func(info *js.Object) {
-		close(feed)
-	})
-	changes.Call("on", "error", func(e *js.Object) {
-		c.err = bindings.NewPouchError(e)
-	})
+	changes.Call("on", "change", c.change)
+	changes.Call("on", "complete", c.complete)
+	changes.Call("on", "error", c.error)
 	return c, nil
 }
