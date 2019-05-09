@@ -99,7 +99,7 @@ func (d *db) Changes(ctx context.Context, options map[string]interface{}) (drive
 			}
 			row := &driver.Change{
 				ID:      change.ID,
-				Seq:     driver.SequenceID(change.Seq),
+				Seq:     change.Seq,
 				Deleted: change.Deleted,
 				Doc:     doc,
 				Changes: changedRevs,
