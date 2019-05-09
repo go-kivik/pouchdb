@@ -46,6 +46,16 @@ func (c *changesFeed) Close() error {
 	return nil
 }
 
+// LastSeq returns an empty string.
+func (c *changesFeed) LastSeq() string {
+	return ""
+}
+
+// Pending returns 0
+func (c *changesFeed) Pending() int64 {
+	return 0
+}
+
 func (d *db) Changes(ctx context.Context, options map[string]interface{}) (driver.Changes, error) {
 	opts := map[string]interface{}{
 		"live":    true,
