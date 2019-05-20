@@ -19,6 +19,7 @@ type changesFeed struct {
 	feed    chan *driver.Change
 	errMu   sync.Mutex
 	err     error
+	lastSeq string
 }
 
 var _ driver.Changes = &changesFeed{}
@@ -79,12 +80,12 @@ func (c *changesFeed) Close() error {
 	return nil
 }
 
-// LastSeq returns an empty string.
+// LastSeq returns the last_seq id, as returned by PouchDB.
 func (c *changesFeed) LastSeq() string {
-	return ""
+	return c.lastSeq
 }
 
-// Pending returns 0
+// Pending returns 0 for PouchDB.
 func (c *changesFeed) Pending() int64 {
 	return 0
 }
@@ -121,6 +122,16 @@ func (c *changesFeed) change(change *changeRow) {
 }
 
 func (c *changesFeed) complete(info *js.Object) {
+	if results := info.Get("results"); results != js.Undefined {
+		for _, result := range results.Interface().([]interface{}) {
+			c.change(&changeRow{
+				Object: result.(*js.Object),
+			})
+		}
+	}
+
+	c.lastSeq = info.Get("last_seq").String()
+
 	close(c.feed)
 }
 
