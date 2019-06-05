@@ -90,6 +90,11 @@ func (c *changesFeed) Pending() int64 {
 	return 0
 }
 
+// ETag returns an empty string for PouchDB.
+func (c *changesFeed) ETag() string {
+	return ""
+}
+
 func (c *changesFeed) change(change *changeRow) {
 	go func() {
 		defer func() {
