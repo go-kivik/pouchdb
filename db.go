@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"os"
+	"net/http"
+	"sync/atomic"
 
 	"github.com/gopherjs/gopherjs/js"
 
@@ -21,9 +21,10 @@ type db struct {
 
 	client *client
 
-	// compacting is set true when compaction begins, and unset when the
+	// these are set to 1 when compaction begins, and unset when the
 	// callback returns.
-	compacting bool
+	compacting  uint32
+	viewCleanup uint32
 }
 
 var _ driver.DB = &db{}
@@ -93,21 +94,19 @@ func (d *db) Stats(ctx context.Context) (*driver.DBStats, error) {
 	i, err := d.db.Info(ctx)
 	return &driver.DBStats{
 		Name:           i.Name,
-		CompactRunning: d.compacting,
+		CompactRunning: atomic.LoadUint32(&d.compacting) == 1 || atomic.LoadUint32(&d.viewCleanup) == 1,
 		DocCount:       i.DocCount,
 		UpdateSeq:      i.UpdateSeq,
 	}, err
 }
 
 func (d *db) Compact(_ context.Context) error {
-	d.compacting = true
-	go func() {
-		defer func() { d.compacting = false }()
-		if err := d.db.Compact(); err != nil {
-			fmt.Fprintf(os.Stderr, "compaction failed: %s\n", err)
-		}
-	}()
-	return nil
+	if atomic.LoadUint32(&d.compacting) == 1 {
+		return &kivik.Error{HTTPStatus: http.StatusTooManyRequests, Err: errors.New("kivik: compaction already running")}
+	}
+	atomic.StoreUint32(&d.compacting, 1)
+	defer atomic.StoreUint32(&d.compacting, 0)
+	return d.db.Compact()
 }
 
 // CompactView  is unimplemented for PouchDB.
@@ -116,14 +115,12 @@ func (d *db) CompactView(_ context.Context, _ string) error {
 }
 
 func (d *db) ViewCleanup(_ context.Context) error {
-	d.compacting = true
-	go func() { // FIXME: #14
-		defer func() { d.compacting = false }()
-		if err := d.db.ViewCleanup(); err != nil {
-			fmt.Fprintf(os.Stderr, "view cleanup failed: %s\n", err)
-		}
-	}()
-	return nil
+	if atomic.LoadUint32(&d.viewCleanup) == 1 {
+		return &kivik.Error{HTTPStatus: http.StatusTooManyRequests, Err: errors.New("kivik: view cleanup already running")}
+	}
+	atomic.StoreUint32(&d.viewCleanup, 1)
+	defer atomic.StoreUint32(&d.viewCleanup, 0)
+	return d.db.ViewCleanup()
 }
 
 var securityNotImplemented = errors.Status(kivik.StatusNotImplemented, "kivik: security interface not supported by PouchDB")
