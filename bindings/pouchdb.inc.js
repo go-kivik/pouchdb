@@ -2,7 +2,8 @@ if ($global.PouchDB === undefined) {
   try {
     $global.PouchDB = require("pouchdb");
   } catch (e) {
-    throw `kivik: pouchdb bindings: Cannot find global PouchDB object. Did you load the PouchDB library?\n${e}`;
+    throw "kivik: pouchdb bindings: Cannot find global PouchDB object. Did you load the PouchDB library?\n" +
+      e;
   }
 }
 try {

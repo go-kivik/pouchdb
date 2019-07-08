@@ -68,9 +68,9 @@ func RegisterPouchDBSuites() {
 
 		"Query/RW/group/Admin/WithDocs/UpdateSeq.skip": true,
 
-		"Version.version":        `^6\.\d\.\d$`,
+		"Version.version":        `^[67]\.\d\.\d$`,
 		"Version.vendor":         `^PouchDB$`,
-		"Version.vendor_version": `^6\.\d\.\d$`,
+		"Version.vendor_version": `^[67]\.\d\.\d$`,
 
 		"Get/RW/group/Admin/bogus.status":  kivik.StatusNotFound,
 		"Get/RW/group/NoAuth/bogus.status": kivik.StatusNotFound,
