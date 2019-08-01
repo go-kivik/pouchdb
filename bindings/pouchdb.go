@@ -85,7 +85,7 @@ func callBack(ctx context.Context, o caller, method string, args ...interface{})
 	resultCh := make(chan *js.Object)
 	var err error
 	o.Call(method, args...).Call("then", func(r *js.Object) {
-		resultCh <- r
+		go func() { resultCh <- r }()
 	}).Call("catch", func(e *js.Object) {
 		err = NewPouchError(e)
 		close(resultCh)
