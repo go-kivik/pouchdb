@@ -6,9 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/flimzy/diff"
-	"github.com/flimzy/testy"
 	"github.com/gopherjs/gopherjs/js"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik/driver"
 	"github.com/go-kivik/pouchdb/bindings"
@@ -40,7 +39,7 @@ func TestBuildIndex(t *testing.T) {
 				t.Errorf("Build Index failed: %s", err)
 			}
 			r := js.Global.Get("JSON").Call("stringify", result).String()
-			if d := diff.JSON([]byte(test.Expected), []byte(r)); d != nil {
+			if d := testy.DiffJSON([]byte(test.Expected), []byte(r)); d != nil {
 				t.Errorf("BuildIndex result differs:\n%s\n", d)
 			}
 		})
@@ -122,7 +121,7 @@ func TestExplain(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			result, err := test.db.Explain(context.Background(), test.query)
 			testy.Error(t, test.err, err)
-			if d := diff.AsJSON(test.expected, result); d != nil {
+			if d := testy.DiffAsJSON(test.expected, result); d != nil {
 				t.Error(d)
 			}
 		})
@@ -169,7 +168,7 @@ func TestUnmarshalQueryPlan(t *testing.T) {
 			result := new(queryPlan)
 			err := json.Unmarshal([]byte(test.input), &result)
 			testy.ErrorRE(t, test.err, err)
-			if d := diff.Interface(test.expected, result); d != nil {
+			if d := testy.DiffInterface(test.expected, result); d != nil {
 				t.Error(d)
 			}
 		})
