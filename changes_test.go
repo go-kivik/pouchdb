@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/flimzy/diff"
 	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
@@ -42,7 +41,7 @@ func TestChanges(t *testing.T) {
 			results = append(results, changes.ID())
 		}
 		testy.Error(t, test.changesErr, changes.Err())
-		if d := diff.TextSlices(test.expectedIDs, results); d != nil {
+		if d := testy.DiffTextSlices(test.expectedIDs, results); d != nil {
 			t.Error(d)
 		}
 		if ls := changes.LastSeq(); ls != test.expectedLastSeq {
