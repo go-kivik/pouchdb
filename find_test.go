@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/flimzy/diff"
-	"github.com/flimzy/testy"
 	"github.com/gopherjs/gopherjs/js"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik/driver"
 	"github.com/go-kivik/pouchdb/bindings"
