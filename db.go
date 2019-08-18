@@ -79,7 +79,7 @@ func (d *db) Put(ctx context.Context, docID string, doc interface{}, options map
 	jsDoc := js.Global.Get("JSON").Call("parse", string(jsonDoc))
 	if id := jsDoc.Get("_id"); id != js.Undefined {
 		if id.String() != docID {
-			return "", errors.Status(kivik.StatusBadAPICall, "id argument must match _id field in document")
+			return "", errors.Status(http.StatusBadRequest, "id argument must match _id field in document")
 		}
 	}
 	jsDoc.Set("_id", docID)
@@ -123,7 +123,7 @@ func (d *db) ViewCleanup(_ context.Context) error {
 	return d.db.ViewCleanup()
 }
 
-var securityNotImplemented = errors.Status(kivik.StatusNotImplemented, "kivik: security interface not supported by PouchDB")
+var securityNotImplemented = errors.Status(http.StatusNotImplemented, "kivik: security interface not supported by PouchDB")
 
 func (d *db) Security(ctx context.Context) (*driver.Security, error) {
 	return nil, securityNotImplemented

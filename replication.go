@@ -2,6 +2,7 @@ package pouchdb
 
 import (
 	"context"
+	"net/http"
 	"sync"
 	"time"
 
@@ -104,7 +105,7 @@ func (r *replication) Delete(ctx context.Context) (err error) {
 			return nil
 		}
 	}
-	return errors.Status(kivik.StatusNotFound, "replication not found")
+	return errors.Status(http.StatusNotFound, "replication not found")
 }
 
 func replicationEndpoint(dsn string, object interface{}) (name string, obj interface{}, err error) {
@@ -150,7 +151,7 @@ func (c *client) Replicate(_ context.Context, targetDSN, sourceDSN string, optio
 
 func (c *client) GetReplications(_ context.Context, options map[string]interface{}) ([]driver.Replication, error) {
 	for range options {
-		return nil, errors.Status(kivik.StatusBadAPICall, "options not yet supported")
+		return nil, errors.Status(http.StatusBadRequest, "options not yet supported")
 	}
 	c.replicationsMU.RLock()
 	defer c.replicationsMU.RUnlock()

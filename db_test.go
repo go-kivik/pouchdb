@@ -2,6 +2,7 @@ package pouchdb
 
 import (
 	"context"
+	"net/http"
 	"testing"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -31,5 +32,5 @@ func TestPut(t *testing.T) {
 		t.Fatalf("Failed to create db: %s", e)
 	}
 	_, err = client.DB(ctx, dbname).Put(ctx, "foo", map[string]string{"_id": "bar"})
-	testy.StatusError(t, "id argument must match _id field in document", kivik.StatusBadAPICall, err)
+	testy.StatusError(t, "id argument must match _id field in document", http.StatusBadRequest, err)
 }

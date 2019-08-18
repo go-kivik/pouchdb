@@ -2,11 +2,11 @@ package bindings
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
 
-	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kivik/errors"
 )
 
@@ -24,7 +24,7 @@ func NewPouchError(o *js.Object) error {
 	}
 	status := o.Get("status").Int()
 	if status == 0 {
-		status = kivik.StatusInternalServerError
+		status = http.StatusInternalServerError
 	}
 
 	var err, msg string
