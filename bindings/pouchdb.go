@@ -7,12 +7,12 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"net/http"
 	"time"
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
 
-	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kivik/errors"
 )
 
@@ -189,7 +189,7 @@ func (db *DB) Query(ctx context.Context, ddoc, view string, options map[string]i
 	return callBack(ctx, db, "query", ddoc+"/"+view, o)
 }
 
-var findPluginNotLoaded = errors.Status(kivik.StatusNotImplemented, "kivik: pouchdb-find plugin not loaded")
+var findPluginNotLoaded = errors.Status(http.StatusNotImplemented, "kivik: pouchdb-find plugin not loaded")
 
 // Find executes a MongoDB-style find query with the pouchdb-find plugin, if it
 // is installed. If the plugin is not installed, a NotImplemented error will be
@@ -223,7 +223,7 @@ func Objectify(i interface{}) (interface{}, error) {
 	}
 	var x interface{}
 	err := json.Unmarshal(buf, &x)
-	return x, errors.WrapStatus(kivik.StatusBadAPICall, err)
+	return x, errors.WrapStatus(http.StatusBadRequest, err)
 }
 
 // Compact compacts the database, and waits for it to complete. This may take
