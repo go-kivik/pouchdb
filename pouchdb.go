@@ -9,10 +9,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go-kivik/kivik"
-	"github.com/go-kivik/kivik/driver"
-	"github.com/go-kivik/kivik/errors"
-	"github.com/go-kivik/pouchdb/bindings"
+	kivik "github.com/go-kivik/kivik/v3"
+	"github.com/go-kivik/kivik/v3/driver"
+	"github.com/go-kivik/kivik/v3/errors"
+	"github.com/go-kivik/pouchdb/v3/bindings"
 )
 
 type pouchDriver struct{}

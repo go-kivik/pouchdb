@@ -21,8 +21,8 @@ package main
 import (
     "context"
 
-    "github.com/go-kivik/kivik"
-    _ "github.com/go-kivik/pouchdb" // The PouchDB driver
+    kivik "github.com/go-kivik/kivik/v3"
+    _ "github.com/go-kivik/pouchdb/v3" // The PouchDB driver
 )
 
 func main() {

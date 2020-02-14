@@ -9,8 +9,8 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 	"gitlab.com/flimzy/testy"
 
-	"github.com/go-kivik/kivik/driver"
-	"github.com/go-kivik/pouchdb/bindings"
+	"github.com/go-kivik/kivik/v3/driver"
+	"github.com/go-kivik/pouchdb/v3/bindings"
 )
 
 func init() {
