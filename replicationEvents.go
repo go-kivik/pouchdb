@@ -46,7 +46,7 @@ func (rs *replicationState) EndTime() time.Time {
 	return t
 }
 
-func convertTime(value *js.Object) (time.Time, error) {
+func convertTime(value fmt.Stringer) (time.Time, error) {
 	if value == js.Undefined {
 		return time.Time{}, nil
 	}

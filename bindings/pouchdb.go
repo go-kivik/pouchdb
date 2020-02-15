@@ -64,7 +64,7 @@ func setTimeout(ctx context.Context, options map[string]interface{}) map[string]
 		options["ajax"] = make(map[string]interface{})
 	}
 	ajax := options["ajax"].(map[string]interface{})
-	timeout := int(deadline.Sub(time.Now()) * 1000)
+	timeout := int(time.Until(deadline) * 1000)
 	// Used by ajax calls
 	ajax["timeout"] = timeout
 	// Used by changes and replications
@@ -287,7 +287,9 @@ func (db *DB) PutAttachment(ctx context.Context, docID, filename, rev string, bo
 func attachmentObject(contentType string, content io.Reader) (att *js.Object, err error) {
 	RecoverError(&err)
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(content)
+	if _, err := buf.ReadFrom(content); err != nil {
+		return nil, err
+	}
 	if buffer := js.Global.Get("Buffer"); jsbuiltin.TypeOf(buffer) == "function" {
 		// The Buffer type is supported, so we'll use that
 		return buffer.New(buf.String()), nil
