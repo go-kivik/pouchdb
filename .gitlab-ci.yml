@@ -37,7 +37,6 @@ variables:
             )
         - curl https://glide.sh/get | sh
         - glide update
-        - ./script/test_version.sh
         - GOPHERJS_GOROOT="$(go1.12.16 env GOROOT)" gopherjs test $(go list ./... | grep -v /vendor/ | grep -Ev 'kivik/(serve|auth|proxy)')
 
 pouchdb6:
@@ -66,4 +65,5 @@ lint:
         - glide update
         - go get -u github.com/gopherjs/gopherjs
         - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.6
+        - ./script/test_version.sh
         - golangci-lint run ./...
