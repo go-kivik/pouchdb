@@ -14,12 +14,12 @@ import (
 //     defer RecoverError(&err)
 func RecoverError(err *error) {
 	if r := recover(); r != nil {
-		switch r.(type) {
+		switch t := r.(type) {
 		case *js.Object:
-			*err = NewPouchError(r.(*js.Object))
+			*err = NewPouchError(t)
 		case error:
 			// This shouldn't ever happen, but just in case
-			*err = r.(error)
+			*err = t
 		default:
 			// Catch all for everything else
 			*err = fmt.Errorf("%v", r)

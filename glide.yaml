@@ -3,7 +3,7 @@ ignore:
 - github.com/gopherjs/gopherjs
 import:
 - package: github.com/go-kivik/kivik
-  version: master
+  version: 2.0.0
   subpackages:
   - driver
   - errors
@@ -13,6 +13,6 @@ import:
 - package: gitlab.com/flimzy/testy
   version: master
 - package: github.com/go-kivik/kiviktest
-  version: master
+  version: 2.0.0
   subpackages:
   - kt

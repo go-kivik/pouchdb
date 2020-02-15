@@ -8,7 +8,7 @@ import (
 	_ "github.com/go-kivik/pouchdb/bindings/poucherr"
 )
 
-type statuser interface {
+type statuser interface { // nolint:misspell
 	StatusCode() int
 }
 
@@ -75,7 +75,7 @@ func TestNewPouchError(t *testing.T) {
 				if result == nil {
 					return
 				}
-				status := result.(statuser).StatusCode()
+				status := result.(statuser).StatusCode() // nolint:misspell
 				if status != test.ExpectedStatus {
 					t.Errorf("Expected status %d, got %d", test.ExpectedStatus, status)
 				}
