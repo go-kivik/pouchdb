@@ -36,7 +36,7 @@ variables:
                 cp build/Release/syscall.node ~/.node_libraries/syscall.node
             )
         - go mod vendor
-        - GOPHERJS_GOROOT="$(go1.12.16 env GOROOT)" gopherjs test $(go list ./... | grep -v /vendor/ | grep -Ev 'kivik/(serve|auth|proxy)')
+        - GOPHERJS_GOROOT="$(go1.12.16 env GOROOT)" gopherjs test $(go list -mod=vendor ./... | grep -Ev 'kivik/(serve|auth|proxy)')
 
 pouchdb6:
     <<: *test_template
