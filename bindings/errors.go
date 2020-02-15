@@ -7,7 +7,7 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
 
-	"github.com/go-kivik/kivik/v3/errors"
+	"github.com/go-kivik/kivik/v4/errors"
 )
 
 type pouchError struct {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
-	"github.com/go-kivik/kivik/v3/driver"
-	"github.com/go-kivik/kivik/v3/errors"
+	"github.com/go-kivik/kivik/v4/driver"
+	"github.com/go-kivik/kivik/v4/errors"
 )
 
 type bulkResult struct {

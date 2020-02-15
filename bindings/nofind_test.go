@@ -7,7 +7,7 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
-	kivik "github.com/go-kivik/kivik/v3"
+	kivik "github.com/go-kivik/kivik/v4"
 )
 
 func init() {

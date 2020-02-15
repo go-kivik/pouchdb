@@ -5,7 +5,7 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
-	_ "github.com/go-kivik/pouchdb/v3/bindings/poucherr"
+	_ "github.com/go-kivik/pouchdb/v4/bindings/poucherr"
 )
 
 type statuser interface { // nolint:misspell

@@ -9,8 +9,8 @@
 //  import (
 //      "context"
 //
-//      kivik "github.com/go-kivik/kivik/v3"
-//      _ "github.com/go-kivik/pouchdb/v3" // PouchDB driver
+//      kivik "github.com/go-kivik/kivik/v4"
+//      _ "github.com/go-kivik/pouchdb/v4" // PouchDB driver
 //  )
 //
 //  func main() {
