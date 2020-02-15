@@ -64,6 +64,6 @@ case "$1" in
     ;;
     "linter")
         go get -u github.com/gopherjs/gopherjs
-        go get -u gopkg.in/alecthomas/gometalinter.v1 && gometalinter.v1 --install
+        curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.6
     ;;
 esac
