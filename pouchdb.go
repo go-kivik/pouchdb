@@ -100,7 +100,7 @@ func (c *client) dbURL(db string) string {
 // Options is a struct of options, as documented in the PouchDB API.
 type Options map[string]interface{}
 
-func (c *client) options(options ...Options) (Options, error) {
+func (c *client) options(options ...Options) Options {
 	o := Options{}
 	for _, defOpts := range c.opts {
 		for k, v := range defOpts {
@@ -112,7 +112,7 @@ func (c *client) options(options ...Options) (Options, error) {
 			o[k] = v
 		}
 	}
-	return o, nil
+	return o
 }
 
 func (c *client) isRemote() bool {
@@ -123,11 +123,8 @@ func (c *client) isRemote() bool {
 // for remote databases. For local databases, it creates the database.
 // Silly PouchDB.
 func (c *client) DBExists(ctx context.Context, dbName string, options map[string]interface{}) (bool, error) {
-	opts, err := c.options(options, Options{"skip_setup": true})
-	if err != nil {
-		return false, err
-	}
-	_, err = c.pouch.New(c.dbURL(dbName), opts).Info(ctx)
+	opts := c.options(options, Options{"skip_setup": true})
+	_, err := c.pouch.New(c.dbURL(dbName), opts).Info(ctx)
 	if err == nil {
 		return true, nil
 	}
@@ -143,19 +140,13 @@ func (c *client) CreateDB(ctx context.Context, dbName string, options map[string
 			return errors.Status(http.StatusPreconditionFailed, "database exists")
 		}
 	}
-	opts, err := c.options(options)
-	if err != nil {
-		return err
-	}
-	_, err = c.pouch.New(c.dbURL(dbName), opts).Info(ctx)
+	opts := c.options(options)
+	_, err := c.pouch.New(c.dbURL(dbName), opts).Info(ctx)
 	return err
 }
 
 func (c *client) DestroyDB(ctx context.Context, dbName string, options map[string]interface{}) error {
-	opts, err := c.options(options)
-	if err != nil {
-		return err
-	}
+	opts := c.options(options)
 	exists, err := c.DBExists(ctx, dbName, opts)
 	if err != nil {
 		return err
@@ -168,10 +159,7 @@ func (c *client) DestroyDB(ctx context.Context, dbName string, options map[strin
 }
 
 func (c *client) DB(ctx context.Context, dbName string, options map[string]interface{}) (driver.DB, error) {
-	opts, err := c.options(options)
-	if err != nil {
-		return nil, err
-	}
+	opts := c.options(options)
 	exists, err := c.DBExists(ctx, dbName, opts)
 	if err != nil {
 		return nil, err
