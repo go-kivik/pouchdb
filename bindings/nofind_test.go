@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/go-kivik/kivik"
 	"github.com/gopherjs/gopherjs/js"
+
+	kivik "github.com/go-kivik/kivik/v3"
 )
 
 func init() {
