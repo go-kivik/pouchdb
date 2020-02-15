@@ -21,8 +21,8 @@ variables:
         - mkdir -p $(dirname ${SRCDIR})
         - ln -s ${CI_PROJECT_DIR} ${SRCDIR}
         - cd ${SRCDIR}
-        - curl -sL https://deb.nodesource.com/setup_6.x | bash -
-        - apt-get update -qq && apt-get install -y nodejs npm
+        - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
+        - apt-get update -qq && apt-get install -y nodejs
         - cp "$NPM_PROFILE" package.json
         - npm install
         - GO111MODULE=off go get -u github.com/gopherjs/gopherjs
@@ -43,11 +43,13 @@ variables:
 pouchdb6:
     <<: *test_template
     variables:
+        NODE_VER: 10
         NPM_PROFILE: pouchdb6-package.json
 
 pouchdb7:
     <<: *test_template
     variables:
+        NODE_VER: 12
         NPM_PROFILE: pouchdb7-package.json
 
 lint:
