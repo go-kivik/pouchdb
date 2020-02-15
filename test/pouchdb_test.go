@@ -5,7 +5,7 @@ package test
 import (
 	"testing"
 
-	_ "github.com/go-kivik/pouchdb/v3"
+	_ "github.com/go-kivik/pouchdb/v4"
 )
 
 func init() {

@@ -9,7 +9,7 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
 
-	"github.com/go-kivik/pouchdb/v3/bindings"
+	"github.com/go-kivik/pouchdb/v4/bindings"
 )
 
 type replicationState struct {

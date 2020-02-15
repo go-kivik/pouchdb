@@ -2,7 +2,7 @@ stages:
     - test
 
 variables:
-    SRCDIR: /go/src/github.com/go-kivik/pouchdb/v3
+    SRCDIR: /go/src/github.com/go-kivik/pouchdb/v4
     COUCHDB_USER: admin
     COUCHDB_PASSWORD: abc123
     KIVIK_TEST_DSN_COUCH23: http://admin:abc123@couch23:5984/

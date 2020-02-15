@@ -10,10 +10,10 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
-	kivik "github.com/go-kivik/kivik/v3"
-	"github.com/go-kivik/kivik/v3/driver"
-	"github.com/go-kivik/kivik/v3/errors"
-	"github.com/go-kivik/pouchdb/v3/bindings"
+	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4/driver"
+	"github.com/go-kivik/kivik/v4/errors"
+	"github.com/go-kivik/pouchdb/v4/bindings"
 )
 
 type db struct {
