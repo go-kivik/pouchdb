@@ -12,6 +12,6 @@ case "$1" in
     ;;
     "linter")
         go install # to make gotype (run by gometalinter) happy
-        gometalinter.v1 --config .linter.json
+        golangci-lint run ./...
     ;;
 esac
