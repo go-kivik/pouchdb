@@ -2,13 +2,13 @@ stages:
     - test
 
 variables:
-    SRCDIR: /go/src/github.com/go-kivik/pouchdb
+    SRCDIR: /go/src/github.com/go-kivik/pouchdb/v3
     COUCHDB_USER: admin
     COUCHDB_PASSWORD: abc123
     KIVIK_TEST_DSN_COUCH23: http://admin:abc123@couch23:5984/
 
 .test: &test_template
-    image: golang:1.12
+    image: golang:1.13
     stage: test
     services:
         - name: apache/couchdb:2.3.1
@@ -18,8 +18,8 @@ variables:
     script:
         - go get golang.org/dl/go1.12.16
         - go1.12.16 download
-        - mkdir -p $(dirname ${SRCDIR})
-        - ln -s ${CI_PROJECT_DIR} ${SRCDIR}
+        - mkdir -p ${SRCDIR}
+        - mv ${CI_PROJECT_DIR}/* ${SRCDIR}
         - cd ${SRCDIR}
         - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
         - apt-get update -qq && apt-get install -y nodejs
@@ -35,8 +35,7 @@ variables:
                 mkdir -p ~/.node_libraries/
                 cp build/Release/syscall.node ~/.node_libraries/syscall.node
             )
-        - curl https://glide.sh/get | sh
-        - glide update
+        - go mod vendor
         - GOPHERJS_GOROOT="$(go1.12.16 env GOROOT)" gopherjs test $(go list ./... | grep -v /vendor/ | grep -Ev 'kivik/(serve|auth|proxy)')
 
 pouchdb6:
@@ -53,17 +52,12 @@ pouchdb7:
 
 lint:
     stage: test
-    image: golang:1.12
+    image: golang:1.13
     services: []
     before_script:
         - ''
     script:
-        - mkdir -p $(dirname ${SRCDIR})
-        - ln -s ${CI_PROJECT_DIR} ${SRCDIR}
-        - cd ${SRCDIR}
-        - curl https://glide.sh/get | sh
-        - glide update
-        - go get -u github.com/gopherjs/gopherjs
+        - go mod download
         - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.6
         - ./script/test_version.sh
         - golangci-lint run ./...
