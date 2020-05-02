@@ -32,7 +32,7 @@ func (d *db) GetAttachment(ctx context.Context, docID, filename string, opts map
 
 func parseAttachment(obj *js.Object) (att *driver.Attachment, err error) {
 	defer bindings.RecoverError(&err)
-	if jsbuiltin.TypeOf(obj.Get("write")) == "function" {
+	if jsbuiltin.TypeOf(obj.Get("write")) == jsbuiltin.TypeFunction {
 		// This looks like a Buffer object; we're in Node.js
 		body := obj.Call("toString", "binary").String()
 		// It might make sense to wrap the Buffer itself in an io.Reader interface,

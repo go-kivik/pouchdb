@@ -100,7 +100,7 @@ func callBack(ctx context.Context, o caller, method string, args ...interface{})
 
 // AllDBs returns the list of all existing (undeleted) databases.
 func (p *PouchDB) AllDBs(ctx context.Context) ([]string, error) {
-	if jsbuiltin.TypeOf(p.Get("allDbs")) != "function" {
+	if jsbuiltin.TypeOf(p.Get("allDbs")) != jsbuiltin.TypeFunction {
 		return nil, errors.New("pouchdb-all-dbs plugin not loaded")
 	}
 	result, err := callBack(ctx, p, "allDbs")
@@ -290,8 +290,13 @@ func attachmentObject(contentType string, content io.Reader) (att *js.Object, er
 	if _, err := buf.ReadFrom(content); err != nil {
 		return nil, err
 	}
-	if buffer := js.Global.Get("Buffer"); jsbuiltin.TypeOf(buffer) == "function" {
+	if buffer := js.Global.Get("Buffer"); jsbuiltin.TypeOf(buffer) == jsbuiltin.TypeFunction {
 		// The Buffer type is supported, so we'll use that
+		if jsbuiltin.TypeOf(buffer.Get("from")) == jsbuiltin.TypeFunction {
+			// For newer versions of Node.js. See https://nodejs.org/fa/docs/guides/buffer-constructor-deprecation/
+			return buffer.Call("from", buf.String()), nil
+		}
+		// Fall back to legacy Buffer constructor.
 		return buffer.New(buf.String()), nil
 	}
 	if js.Global.Get("Blob") != js.Undefined {
