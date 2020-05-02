@@ -3,6 +3,7 @@ package pouchdb
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -11,7 +12,6 @@ import (
 
 	kivik "github.com/go-kivik/kivik/v3"
 	"github.com/go-kivik/kivik/v3/driver"
-	"github.com/go-kivik/kivik/v3/errors"
 	"github.com/go-kivik/pouchdb/v3/bindings"
 )
 
@@ -137,7 +137,7 @@ func (c *client) DBExists(ctx context.Context, dbName string, options map[string
 func (c *client) CreateDB(ctx context.Context, dbName string, options map[string]interface{}) error {
 	if c.isRemote() {
 		if exists, _ := c.DBExists(ctx, dbName, options); exists {
-			return errors.Status(http.StatusPreconditionFailed, "database exists")
+			return &kivik.Error{HTTPStatus: http.StatusPreconditionFailed, Message: "database exists"}
 		}
 	}
 	opts := c.options(options)
@@ -153,7 +153,7 @@ func (c *client) DestroyDB(ctx context.Context, dbName string, options map[strin
 	}
 	if !exists {
 		// This will only ever do anything for a remote database
-		return errors.Status(http.StatusNotFound, "database does not exist")
+		return &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "database does not exist"}
 	}
 	return c.pouch.New(c.dbURL(dbName), opts).Destroy(ctx, nil)
 }
@@ -165,7 +165,7 @@ func (c *client) DB(ctx context.Context, dbName string, options map[string]inter
 		return nil, err
 	}
 	if !exists {
-		return nil, errors.Status(http.StatusNotFound, "database does not exist")
+		return nil, &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "database does not exist"}
 	}
 	return &db{
 		db:     c.pouch.New(c.dbURL(dbName), opts),

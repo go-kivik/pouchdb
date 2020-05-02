@@ -9,8 +9,8 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
+	kivik "github.com/go-kivik/kivik/v3"
 	"github.com/go-kivik/kivik/v3/driver"
-	"github.com/go-kivik/kivik/v3/errors"
 	"github.com/go-kivik/pouchdb/v3/bindings"
 )
 
@@ -76,7 +76,7 @@ func (d *db) findIndex(ctx context.Context, ddoc, name string) (interface{}, err
 			}, nil
 		}
 	}
-	return nil, errors.Status(http.StatusNotFound, "index does not exist")
+	return nil, &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "index does not exist"}
 }
 
 func (d *db) DeleteIndex(ctx context.Context, ddoc, name string) error {
