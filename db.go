@@ -12,7 +12,6 @@ import (
 
 	kivik "github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kivik/v4/driver"
-	"github.com/go-kivik/kivik/v4/errors"
 	"github.com/go-kivik/pouchdb/v4/bindings"
 )
 
@@ -79,7 +78,7 @@ func (d *db) Put(ctx context.Context, docID string, doc interface{}, options map
 	jsDoc := js.Global.Get("JSON").Call("parse", string(jsonDoc))
 	if id := jsDoc.Get("_id"); id != js.Undefined {
 		if id.String() != docID {
-			return "", errors.Status(http.StatusBadRequest, "id argument must match _id field in document")
+			return "", &kivik.Error{HTTPStatus: http.StatusBadRequest, Message: "id argument must match _id field in document"}
 		}
 	}
 	jsDoc.Set("_id", docID)
@@ -102,7 +101,7 @@ func (d *db) Stats(ctx context.Context) (*driver.DBStats, error) {
 
 func (d *db) Compact(_ context.Context) error {
 	if atomic.LoadUint32(&d.compacting) == 1 {
-		return &kivik.Error{HTTPStatus: http.StatusTooManyRequests, Err: errors.New("kivik: compaction already running")}
+		return &kivik.Error{HTTPStatus: http.StatusTooManyRequests, Message: "kivik: compaction already running"}
 	}
 	atomic.StoreUint32(&d.compacting, 1)
 	defer atomic.StoreUint32(&d.compacting, 0)
@@ -116,14 +115,14 @@ func (d *db) CompactView(_ context.Context, _ string) error {
 
 func (d *db) ViewCleanup(_ context.Context) error {
 	if atomic.LoadUint32(&d.viewCleanup) == 1 {
-		return &kivik.Error{HTTPStatus: http.StatusTooManyRequests, Err: errors.New("kivik: view cleanup already running")}
+		return &kivik.Error{HTTPStatus: http.StatusTooManyRequests, Message: "kivik: view cleanup already running"}
 	}
 	atomic.StoreUint32(&d.viewCleanup, 1)
 	defer atomic.StoreUint32(&d.viewCleanup, 0)
 	return d.db.ViewCleanup()
 }
 
-var securityNotImplemented = errors.Status(http.StatusNotImplemented, "kivik: security interface not supported by PouchDB")
+var securityNotImplemented = &kivik.Error{HTTPStatus: http.StatusNotImplemented, Message: "kivik: security interface not supported by PouchDB"}
 
 func (d *db) Security(ctx context.Context) (*driver.Security, error) {
 	return nil, securityNotImplemented

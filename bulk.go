@@ -7,8 +7,8 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 
+	kivik "github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kivik/v4/driver"
-	"github.com/go-kivik/kivik/v4/errors"
 )
 
 type bulkResult struct {
@@ -47,7 +47,7 @@ func (r *bulkResults) Next(update *driver.BulkResult) (err error) {
 	update.Rev = result.ID
 	update.Error = nil
 	if result.IsError {
-		update.Error = errors.Status(result.StatusCode, result.Reason)
+		update.Error = &kivik.Error{HTTPStatus: result.StatusCode, Message: result.Reason}
 	}
 	return nil
 }
