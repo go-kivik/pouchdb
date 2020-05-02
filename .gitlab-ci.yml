@@ -50,14 +50,9 @@ pouchdb7:
         NODE_VER: 12
         NPM_PROFILE: pouchdb7-package.json
 
-lint:
+linter:
     stage: test
-    image: golang:1.13
-    services: []
-    before_script:
-        - ''
+    image: golangci/golangci-lint:v1.26
     script:
         - go mod download
-        - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.6
-        - ./script/test_version.sh
         - golangci-lint run ./...
