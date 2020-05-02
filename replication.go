@@ -10,7 +10,6 @@ import (
 
 	kivik "github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kivik/v4/driver"
-	"github.com/go-kivik/kivik/v4/errors"
 	"github.com/go-kivik/pouchdb/v4/bindings"
 )
 
@@ -105,7 +104,7 @@ func (r *replication) Delete(ctx context.Context) (err error) {
 			return nil
 		}
 	}
-	return errors.Status(http.StatusNotFound, "replication not found")
+	return &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "replication not found"}
 }
 
 func replicationEndpoint(dsn string, object interface{}) (name string, obj interface{}, err error) {
@@ -148,7 +147,7 @@ func (c *client) Replicate(_ context.Context, targetDSN, sourceDSN string, optio
 
 func (c *client) GetReplications(_ context.Context, options map[string]interface{}) ([]driver.Replication, error) {
 	for range options {
-		return nil, errors.Status(http.StatusBadRequest, "options not yet supported")
+		return nil, &kivik.Error{HTTPStatus: http.StatusBadRequest, Message: "options not yet supported"}
 	}
 	c.replicationsMU.RLock()
 	defer c.replicationsMU.RUnlock()
