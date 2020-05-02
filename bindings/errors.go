@@ -7,7 +7,7 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/jsbuiltin"
 
-	"github.com/go-kivik/kivik/v3/errors"
+	"github.com/go-kivik/kivik/v3"
 )
 
 type pouchError struct {
@@ -35,7 +35,7 @@ func NewPouchError(o *js.Object) error {
 		msg = o.Get("message").String()
 	default:
 		if jsbuiltin.InstanceOf(o, js.Global.Get("Error")) {
-			return errors.Status(status, o.Get("message").String())
+			return &kivik.Error{HTTPStatus: status, Message: o.Get("message").String()}
 		}
 	}
 	switch {
