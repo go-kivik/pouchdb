@@ -292,6 +292,11 @@ func attachmentObject(contentType string, content io.Reader) (att *js.Object, er
 	}
 	if buffer := js.Global.Get("Buffer"); jsbuiltin.TypeOf(buffer) == "function" {
 		// The Buffer type is supported, so we'll use that
+		if jsbuiltin.TypeOf(buffer.Get("from")) == "function" {
+			// For newer versions of Node.js. See https://nodejs.org/fa/docs/guides/buffer-constructor-deprecation/
+			return buffer.Call("from", buf.String()), nil
+		}
+		// Fall back to legacy Buffer constructor.
 		return buffer.New(buf.String()), nil
 	}
 	if js.Global.Get("Blob") != js.Undefined {
