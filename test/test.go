@@ -1,3 +1,15 @@
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+
 package test
 
 import (
@@ -43,7 +55,7 @@ func RegisterPouchDBSuites() {
 		"AllDocs/RW/group/Admin/WithDocs/UpdateSeq.skip": true,
 
 		"Find/Admin.databases":                []string{},
-		"Find/RW/group/Admin/Warning.warning": "no matching index found, create an index to optimize query time",
+		"Find/RW/group/Admin/Warning.warning": "No matching index found, create an index to optimize query time",
 
 		"Explain.databases": []string{},
 		"Explain.plan": &kivik.QueryPlan{
@@ -167,8 +179,8 @@ func RegisterPouchDBSuites() {
 		"Find/Admin/_duck.status":              http.StatusNotFound,
 		"Find/NoAuth/chicken.status":           http.StatusNotFound,
 		"Find/NoAuth/_duck.status":             http.StatusUnauthorized,
-		"Find/RW/group/Admin/Warning.warning":  "no matching index found, create an index to optimize query time",
-		"Find/RW/group/NoAuth/Warning.warning": "no matching index found, create an index to optimize query time",
+		"Find/RW/group/Admin/Warning.warning":  "No matching index found, create an index to optimize query time",
+		"Find/RW/group/NoAuth/Warning.warning": "No matching index found, create an index to optimize query time",
 
 		"Explain.databases":             []string{"chicken", "_duck"},
 		"Explain/Admin/chicken.status":  http.StatusNotFound,
@@ -222,7 +234,8 @@ func RegisterPouchDBSuites() {
 		"GetIndexes/NoAuth/_users.indexes":         []kivik.Index{kt.AllDocsIndex},
 		"GetIndexes/NoAuth/_global_changes.skip":   true, // Pouch connects to the DB before searching the Index, so this test fails
 		"GetIndexes/NoAuth/_global_changes.status": http.StatusUnauthorized,
-		"GetIndexes/RW.indexes": []kivik.Index{kt.AllDocsIndex,
+		"GetIndexes/RW.indexes": []kivik.Index{
+			kt.AllDocsIndex,
 			{
 				DesignDoc: "_design/foo",
 				Name:      "bar",
@@ -307,7 +320,6 @@ func RegisterPouchDBSuites() {
 			parsed, _ := url.Parse(dsn)
 			parsed.User = nil
 			return strings.TrimSuffix(parsed.String(), "/") + "/doesntexist"
-
 		}(),
 		"Replicate.prefix":         "none",
 		"Replicate.timeoutSeconds": 5,
