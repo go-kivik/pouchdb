@@ -55,7 +55,7 @@ func RegisterPouchDBSuites() {
 		"AllDocs/RW/group/Admin/WithDocs/UpdateSeq.skip": true,
 
 		"Find/Admin.databases":                []string{},
-		"Find/RW/group/Admin/Warning.warning": "no matching index found, create an index to optimize query time",
+		"Find/RW/group/Admin/Warning.warning": "No matching index found, create an index to optimize query time",
 
 		"Explain.databases": []string{},
 		"Explain.plan": &kivik.QueryPlan{
@@ -179,8 +179,8 @@ func RegisterPouchDBSuites() {
 		"Find/Admin/_duck.status":              http.StatusNotFound,
 		"Find/NoAuth/chicken.status":           http.StatusNotFound,
 		"Find/NoAuth/_duck.status":             http.StatusUnauthorized,
-		"Find/RW/group/Admin/Warning.warning":  "no matching index found, create an index to optimize query time",
-		"Find/RW/group/NoAuth/Warning.warning": "no matching index found, create an index to optimize query time",
+		"Find/RW/group/Admin/Warning.warning":  "No matching index found, create an index to optimize query time",
+		"Find/RW/group/NoAuth/Warning.warning": "No matching index found, create an index to optimize query time",
 
 		"Explain.databases":             []string{"chicken", "_duck"},
 		"Explain/Admin/chicken.status":  http.StatusNotFound,
