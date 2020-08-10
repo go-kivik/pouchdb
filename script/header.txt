@@ -10,22 +10,3 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-if ($global.PouchDB === undefined) {
-  try {
-    $global.PouchDB = require("pouchdb");
-  } catch (e) {
-    throw "kivik: pouchdb bindings: Cannot find global PouchDB object. Did you load the PouchDB library?\n" +
-      e;
-  }
-}
-try {
-  require("pouchdb-all-dbs")($global.PouchDB);
-} catch (e) {}
-
-try {
-  $global.PouchDB.plugin(require("pouchdb-find"));
-} catch (e) {}
-
-try {
-  global.XMLHttpRequest = require("xhr2");
-} catch (e) {}

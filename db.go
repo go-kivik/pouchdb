@@ -1,3 +1,15 @@
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+
 package pouchdb
 
 import (
@@ -26,8 +38,10 @@ type db struct {
 	viewCleanup uint32
 }
 
-var _ driver.DB = &db{}
-var _ driver.DBCloser = &db{}
+var (
+	_ driver.DB       = &db{}
+	_ driver.DBCloser = &db{}
+)
 
 func (d *db) AllDocs(ctx context.Context, options map[string]interface{}) (driver.Rows, error) {
 	result, err := d.db.AllDocs(ctx, options)
