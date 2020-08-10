@@ -52,7 +52,7 @@ pouchdb7:
 
 linter:
     stage: test
-    image: golangci/golangci-lint:v1.26
+    image: golangci/golangci-lint:v1.30
     script:
         - go mod download
         - golangci-lint run ./...
