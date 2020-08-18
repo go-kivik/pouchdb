@@ -131,7 +131,7 @@ func TestExplain(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			result, err := test.db.Explain(context.Background(), test.query)
+			result, err := test.db.Explain(context.Background(), test.query, nil)
 			testy.Error(t, test.err, err)
 			if d := testy.DiffAsJSON(test.expected, result); d != nil {
 				t.Error(d)
