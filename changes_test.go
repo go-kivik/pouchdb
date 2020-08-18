@@ -45,7 +45,7 @@ func TestChanges(t *testing.T) {
 		if err := client.CreateDB(ctx, dbname); err != nil {
 			t.Fatalf("Failed to create db: %s", err)
 		}
-		db := client.DB(ctx, dbname)
+		db := client.DB(dbname)
 		changes, err := db.Changes(ctx, test.opts)
 		testy.StatusError(t, test.err, test.status, err)
 		results := []string{}

@@ -170,16 +170,11 @@ func (c *client) DestroyDB(ctx context.Context, dbName string, options map[strin
 	return c.pouch.New(c.dbURL(dbName), opts).Destroy(ctx, nil)
 }
 
-func (c *client) DB(ctx context.Context, dbName string, options map[string]interface{}) (driver.DB, error) {
+func (c *client) DB(dbName string, options map[string]interface{}) (driver.DB, error) {
 	opts := c.options(options)
-	exists, err := c.DBExists(ctx, dbName, opts)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "database does not exist"}
-	}
 	return &db{
+		// TODO: #68 Consider deferring this pouch.New call until the first use,
+		// so ctx can be used.
 		db:     c.pouch.New(c.dbURL(dbName), opts),
 		client: c,
 	}, nil

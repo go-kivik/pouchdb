@@ -43,6 +43,6 @@ func TestPut(t *testing.T) {
 	if e := client.CreateDB(ctx, dbname); e != nil {
 		t.Fatalf("Failed to create db: %s", e)
 	}
-	_, err = client.DB(ctx, dbname).Put(ctx, "foo", map[string]string{"_id": "bar"})
+	_, err = client.DB(dbname).Put(ctx, "foo", map[string]string{"_id": "bar"})
 	testy.StatusError(t, "id argument must match _id field in document", http.StatusBadRequest, err)
 }
