@@ -37,6 +37,12 @@ func init() {
 
 // RegisterPouchDBSuites registers the PouchDB test suites.
 func RegisterPouchDBSuites() {
+	indexWarning := "No matching index found, create an index to optimize query time."
+	if os.Getenv("NPM_PROFILE") == "pouchdb6-package.json" {
+		indexWarning = "no matching index found, create an index to optimize query time"
+
+	}
+
 	kiviktest.RegisterSuite(kiviktest.SuitePouchLocal, kt.SuiteConfig{
 		"PreCleanup.skip": true,
 
@@ -55,7 +61,7 @@ func RegisterPouchDBSuites() {
 		"AllDocs/RW/group/Admin/WithDocs/UpdateSeq.skip": true,
 
 		"Find/Admin.databases":                []string{},
-		"Find/RW/group/Admin/Warning.warning": "No matching index found, create an index to optimize query time",
+		"Find/RW/group/Admin/Warning.warning": indexWarning,
 
 		"Explain.databases": []string{},
 		"Explain.plan": &kivik.QueryPlan{
