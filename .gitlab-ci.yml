@@ -1,57 +1,57 @@
 stages:
-    - test
+- test
 
 variables:
-    SRCDIR: /go/src/github.com/go-kivik/pouchdb/v4
-    COUCHDB_USER: admin
-    COUCHDB_PASSWORD: abc123
-    KIVIK_TEST_DSN_COUCH23: http://admin:abc123@couch23:5984/
+  SRCDIR: /go/src/github.com/go-kivik/pouchdb/v4
+  COUCHDB_USER: admin
+  COUCHDB_PASSWORD: abc123
+  KIVIK_TEST_DSN_COUCH23: http://admin:abc123@couch23:5984/
 
 .test: &test_template
-    image: golang:1.16
-    stage: test
-    services:
-        - name: apache/couchdb:2.3.1
-          alias: couch23
-    before_script:
-        - ./script/complete_couch2.sh ${KIVIK_TEST_DSN_COUCH23}
-        - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
-        - apt-get update -qq && apt-get install -y nodejs
-    script:
-        - mkdir -p ${SRCDIR}
-        - mv ${CI_PROJECT_DIR}/* ${SRCDIR}
-        - cd ${SRCDIR}
-        - cp "$NPM_PROFILE" package.json
-        - npm install
-        - GO111MODULE=off go get -u github.com/gopherjs/gopherjs
-        - npm install source-map-support
-        - |
-            (
-                cd $GOPATH/src/github.com/gopherjs/gopherjs/node-syscall/
-                npm install --global node-gyp
-                node-gyp rebuild
-                mkdir -p ~/.node_libraries/
-                cp build/Release/syscall.node ~/.node_libraries/syscall.node
-            )
-        - go mod vendor
-        - gopherjs test ./...
+  image: golang:1.16
+  stage: test
+  services:
+  - name: apache/couchdb:2.3.1
+    alias: couch23
+  before_script:
+  - ./script/complete_couch2.sh ${KIVIK_TEST_DSN_COUCH23}
+  - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
+  - apt-get update -qq && apt-get install -y nodejs
+  script:
+  - mkdir -p ${SRCDIR}
+  - mv ${CI_PROJECT_DIR}/* ${SRCDIR}
+  - cd ${SRCDIR}
+  - cp "$NPM_PROFILE" package.json
+  - npm install
+  - GO111MODULE=off go get -u github.com/gopherjs/gopherjs
+  - npm install source-map-support
+  - |
+      (
+        cd $GOPATH/src/github.com/gopherjs/gopherjs/node-syscall/
+        npm install --global node-gyp
+        node-gyp rebuild
+        mkdir -p ~/.node_libraries/
+        cp build/Release/syscall.node ~/.node_libraries/syscall.node
+      )
+  - go mod vendor
+  - gopherjs test ./...
 
 pouchdb6:
-    <<: *test_template
-    variables:
-        NODE_VER: 10
-        NPM_PROFILE: pouchdb6-package.json
+  <<: *test_template
+  variables:
+    NODE_VER: 10
+    NPM_PROFILE: pouchdb6-package.json
 
 pouchdb7:
-    <<: *test_template
-    variables:
-        NODE_VER: 12
-        NPM_PROFILE: pouchdb7-package.json
+  <<: *test_template
+  variables:
+    NODE_VER: 12
+    NPM_PROFILE: pouchdb7-package.json
 
 linter:
-    stage: test
-    image: golangci/golangci-lint:v1.39
-    script:
-        - go mod download
-        - golangci-lint run ./...
-        - ./script/check-license.sh
+  stage: test
+  image: golangci/golangci-lint:v1.39
+  script:
+  - go mod download
+  - golangci-lint run ./...
+  - ./script/check-license.sh
