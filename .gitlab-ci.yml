@@ -8,21 +8,19 @@ variables:
     KIVIK_TEST_DSN_COUCH23: http://admin:abc123@couch23:5984/
 
 .test: &test_template
-    image: golang:1.13
+    image: golang:1.16
     stage: test
     services:
         - name: apache/couchdb:2.3.1
           alias: couch23
     before_script:
         - ./script/complete_couch2.sh ${KIVIK_TEST_DSN_COUCH23}
+        - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
+        - apt-get update -qq && apt-get install -y nodejs
     script:
-        - go get golang.org/dl/go1.12.16
-        - go1.12.16 download
         - mkdir -p ${SRCDIR}
         - mv ${CI_PROJECT_DIR}/* ${SRCDIR}
         - cd ${SRCDIR}
-        - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
-        - apt-get update -qq && apt-get install -y nodejs
         - cp "$NPM_PROFILE" package.json
         - npm install
         - GO111MODULE=off go get -u github.com/gopherjs/gopherjs
@@ -36,7 +34,7 @@ variables:
                 cp build/Release/syscall.node ~/.node_libraries/syscall.node
             )
         - go mod vendor
-        - GOPHERJS_GOROOT="$(go1.12.16 env GOROOT)" gopherjs test $(go list -mod=vendor ./... | grep -Ev 'kivik/(serve|auth|proxy)')
+        - gopherjs test ./...
 
 pouchdb6:
     <<: *test_template
