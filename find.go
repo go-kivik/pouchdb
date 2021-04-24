@@ -14,7 +14,7 @@ import (
 	"github.com/go-kivik/pouchdb/v3/bindings"
 )
 
-var _ driver.Finder = &db{}
+var _ driver.Finder = &db{} // nolint:staticcheck
 
 // buildIndex merges the ddoc and name into the index structure, as reqiured
 // by the PouchDB-find plugin.
