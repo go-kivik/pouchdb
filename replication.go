@@ -116,7 +116,7 @@ func (r *replication) Delete(ctx context.Context) (err error) {
 			return nil
 		}
 	}
-	return &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "replication not found"}
+	return &kivik.Error{Status: http.StatusNotFound, Message: "replication not found"}
 }
 
 func replicationEndpoint(dsn string, object interface{}) (name string, obj interface{}, err error) {
@@ -159,7 +159,7 @@ func (c *client) Replicate(_ context.Context, targetDSN, sourceDSN string, optio
 
 func (c *client) GetReplications(_ context.Context, options map[string]interface{}) ([]driver.Replication, error) {
 	for range options {
-		return nil, &kivik.Error{HTTPStatus: http.StatusBadRequest, Message: "options not yet supported"}
+		return nil, &kivik.Error{Status: http.StatusBadRequest, Message: "options not yet supported"}
 	}
 	c.replicationsMU.RLock()
 	defer c.replicationsMU.RUnlock()

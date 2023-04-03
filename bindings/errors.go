@@ -47,7 +47,7 @@ func NewPouchError(o *js.Object) error {
 		msg = o.Get("message").String()
 	default:
 		if jsbuiltin.InstanceOf(o, js.Global.Get("Error")) {
-			return &kivik.Error{HTTPStatus: status, Message: o.Get("message").String()}
+			return &kivik.Error{Status: status, Message: o.Get("message").String()}
 		}
 	}
 	switch {
@@ -81,6 +81,6 @@ func (e *pouchError) Error() string {
 	return fmt.Sprintf("%s: %s", e.Err, e.Message)
 }
 
-func (e *pouchError) StatusCode() int {
+func (e *pouchError) HTTPStatus() int {
 	return e.Status
 }
