@@ -94,8 +94,8 @@ func RegisterPouchDBSuites() {
 		"Get/RW/group/Admin/bogus.status":  http.StatusNotFound,
 		"Get/RW/group/NoAuth/bogus.status": http.StatusNotFound,
 
-		"GetMeta/RW/group/Admin/bogus.status":  http.StatusNotFound,
-		"GetMeta/RW/group/NoAuth/bogus.status": http.StatusNotFound,
+		"GetRev/RW/group/Admin/bogus.status":  http.StatusNotFound,
+		"GetRev/RW/group/NoAuth/bogus.status": http.StatusNotFound,
 
 		"Delete/RW/Admin/group/MissingDoc.status":       http.StatusNotFound,
 		"Delete/RW/Admin/group/InvalidRevFormat.status": http.StatusBadRequest,
@@ -270,8 +270,8 @@ func RegisterPouchDBSuites() {
 		"Get/RW/group/Admin/bogus.status":  http.StatusNotFound,
 		"Get/RW/group/NoAuth/bogus.status": http.StatusNotFound,
 
-		"GetMeta/RW/group/Admin/bogus.status":  http.StatusNotFound,
-		"GetMeta/RW/group/NoAuth/bogus.status": http.StatusNotFound,
+		"GetRev/RW/group/Admin/bogus.status":  http.StatusNotFound,
+		"GetRev/RW/group/NoAuth/bogus.status": http.StatusNotFound,
 
 		"Delete/RW/Admin/group/MissingDoc.status":        http.StatusNotFound,
 		"Delete/RW/Admin/group/InvalidRevFormat.status":  http.StatusBadRequest,
