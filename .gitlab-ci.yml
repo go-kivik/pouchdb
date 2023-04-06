@@ -8,7 +8,6 @@ variables:
     KIVIK_TEST_DSN_COUCH23: http://admin:abc123@couch23:5984/
 
 .test: &test_template
-    image: golang:1.16
     stage: test
     services:
         - name: apache/couchdb:2.3.1
@@ -18,29 +17,23 @@ variables:
         - curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | bash -
         - apt-get update -qq && apt-get install -y nodejs
     script:
-        - mkdir -p ${SRCDIR}
-        - mv ${CI_PROJECT_DIR}/* ${SRCDIR}
-        - cd ${SRCDIR}
         - cp "$NPM_PROFILE" package.json
+        - npm install -g npm@7.5.2 && npm update
         - npm install
-        - GO111MODULE=off go get -u github.com/gopherjs/gopherjs
         - npm install source-map-support
-        - |
-            (
-                cd $GOPATH/src/github.com/gopherjs/gopherjs/node-syscall/
-                npm install --global node-gyp
-                node-gyp rebuild
-                mkdir -p ~/.node_libraries/
-                cp build/Release/syscall.node ~/.node_libraries/syscall.node
-            )
+        - mkdir -p /tmp/src
+        - ( cd /tmp && go install github.com/gopherjs/gopherjs@${GOPHERJS_TAG} )
+        - npm install -S https://github.com/gopherjs/gopherjs#${GOPHERJS_TAG} && node -r syscall
         - go mod vendor
         - gopherjs test ./...
 
-pouchdb7:
+gopherjs16-pouchdb7:
     <<: *test_template
+    image: golang:1.16
     variables:
         NODE_VER: 12
         NPM_PROFILE: pouchdb7-package.json
+        GOPHERJS_TAG: 1.16.4+go1.16.7
 
 linter:
     stage: test
