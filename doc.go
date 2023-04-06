@@ -14,21 +14,21 @@
 // be compiled with GopherJS, and requires that the PouchDB JavaScript library
 // is also loaded at runtime.
 //
-//  // +build js
+//	// +build js
 //
-//  package main
+//	package main
 //
-//  import (
-//      "context"
+//	import (
+//	    "context"
 //
-//      kivik "github.com/go-kivik/kivik/v4"
-//      _ "github.com/go-kivik/pouchdb/v4" // PouchDB driver
-//  )
+//	    kivik "github.com/go-kivik/kivik/v4"
+//	    _ "github.com/go-kivik/pouchdb/v4" // PouchDB driver
+//	)
 //
-//  func main() {
-//      client, err := kivik.New(context.TODO(), "pouch", "")
-//  // ...
-//  }
+//	func main() {
+//	    client, err := kivik.New(context.TODO(), "pouch", "")
+//	// ...
+//	}
 //
 // See https://github.com/go-kivik/pouchdb#usage for details.
 package pouchdb

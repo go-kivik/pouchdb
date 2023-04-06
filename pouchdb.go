@@ -140,7 +140,7 @@ func (c *client) DBExists(ctx context.Context, dbName string, options map[string
 	if err == nil {
 		return true, nil
 	}
-	if kivik.StatusCode(err) == http.StatusNotFound {
+	if kivik.HTTPStatus(err) == http.StatusNotFound {
 		return false, nil
 	}
 	return false, err
@@ -149,7 +149,7 @@ func (c *client) DBExists(ctx context.Context, dbName string, options map[string
 func (c *client) CreateDB(ctx context.Context, dbName string, options map[string]interface{}) error {
 	if c.isRemote() {
 		if exists, _ := c.DBExists(ctx, dbName, options); exists {
-			return &kivik.Error{HTTPStatus: http.StatusPreconditionFailed, Message: "database exists"}
+			return &kivik.Error{Status: http.StatusPreconditionFailed, Message: "database exists"}
 		}
 	}
 	opts := c.options(options)
@@ -165,7 +165,7 @@ func (c *client) DestroyDB(ctx context.Context, dbName string, options map[strin
 	}
 	if !exists {
 		// This will only ever do anything for a remote database
-		return &kivik.Error{HTTPStatus: http.StatusNotFound, Message: "database does not exist"}
+		return &kivik.Error{Status: http.StatusNotFound, Message: "database does not exist"}
 	}
 	return c.pouch.New(c.dbURL(dbName), opts).Destroy(ctx, nil)
 }

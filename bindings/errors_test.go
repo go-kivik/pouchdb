@@ -21,7 +21,7 @@ import (
 )
 
 type statuser interface { // nolint:misspell
-	StatusCode() int
+	HTTPStatus() int
 }
 
 func TestNewPouchError(t *testing.T) {
@@ -87,7 +87,7 @@ func TestNewPouchError(t *testing.T) {
 				if result == nil {
 					return
 				}
-				status := result.(statuser).StatusCode() // nolint:misspell
+				status := result.(statuser).HTTPStatus() // nolint:misspell
 				if status != test.ExpectedStatus {
 					t.Errorf("Expected status %d, got %d", test.ExpectedStatus, status)
 				}

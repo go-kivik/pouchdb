@@ -23,7 +23,7 @@ import (
 //
 // To use, put this at the beginning of a function:
 //
-//     defer RecoverError(&err)
+//	defer RecoverError(&err)
 func RecoverError(err *error) {
 	if r := recover(); r != nil {
 		switch t := r.(type) {
