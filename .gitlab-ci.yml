@@ -42,6 +42,14 @@ gopherjs1.17-pouchdb7:
     NPM_PROFILE: pouchdb7-package.json
     GOPHERJS_TAG: v1.17.2+go1.17.9
 
+gopherjs1.18-pouchdb7:
+  <<: *test_template
+  image: golang:1.18
+  variables:
+    NODE_VER: 12
+    NPM_PROFILE: pouchdb7-package.json
+    GOPHERJS_TAG: v1.18.0-beta2+go1.18.5
+
 linter:
   stage: test
   image: golangci/golangci-lint:v1.39
