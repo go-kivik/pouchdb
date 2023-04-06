@@ -36,12 +36,6 @@ variables:
         - go mod vendor
         - gopherjs test ./...
 
-pouchdb6:
-    <<: *test_template
-    variables:
-        NODE_VER: 10
-        NPM_PROFILE: pouchdb6-package.json
-
 pouchdb7:
     <<: *test_template
     variables:
