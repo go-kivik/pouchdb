@@ -8,5 +8,6 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20210822113901-9ebd50d28389
 	github.com/gopherjs/jsbuiltin v0.0.0-20180426082241-50091555e127
 	github.com/labstack/echo/v4 v4.9.1 // indirect
+	github.com/otiai10/copy v1.10.0 // indirect
 	gitlab.com/flimzy/testy v0.11.0
 )
