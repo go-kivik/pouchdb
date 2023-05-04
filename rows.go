@@ -15,6 +15,7 @@ package pouchdb
 import (
 	"encoding/json"
 	"io"
+	"strings"
 
 	"github.com/gopherjs/gopherjs/js"
 
@@ -50,9 +51,9 @@ func (r *rows) Next(row *driver.Row) (err error) {
 	next := r.Get("rows").Call("shift")
 	row.ID = next.Get("id").String()
 	row.Key = json.RawMessage(jsJSON.Call("stringify", next.Get("key")).String())
-	row.Value = json.RawMessage(jsJSON.Call("stringify", next.Get("value")).String())
+	row.Value = strings.NewReader(jsJSON.Call("stringify", next.Get("value")).String())
 	if doc := next.Get("doc"); doc != js.Undefined {
-		row.Doc = json.RawMessage(jsJSON.Call("stringify", doc).String())
+		row.Doc = strings.NewReader(jsJSON.Call("stringify", doc).String())
 	}
 	return nil
 }

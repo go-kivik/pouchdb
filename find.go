@@ -137,7 +137,7 @@ func (r *findRows) Next(row *driver.Row) (err error) {
 		return io.EOF
 	}
 	next := r.Get("docs").Call("shift")
-	row.Doc = json.RawMessage(jsJSON.Call("stringify", next).String())
+	row.Doc = strings.NewReader(jsJSON.Call("stringify", next).String())
 	return nil
 }
 
