@@ -56,10 +56,14 @@ func TestChanges(t *testing.T) {
 		if d := testy.DiffTextSlices(test.expectedIDs, results); d != nil {
 			t.Error(d)
 		}
-		if ls := changes.LastSeq(); ls != test.expectedLastSeq {
+		meta, err := changes.Metadata()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if ls := meta.LastSeq; ls != test.expectedLastSeq {
 			t.Errorf("Unexpected last_seq: %s", ls)
 		}
-		if p := changes.Pending(); p != test.expectedPending {
+		if p := meta.Pending; p != test.expectedPending {
 			t.Errorf("Unexpected pending count: %d", p)
 		}
 	})

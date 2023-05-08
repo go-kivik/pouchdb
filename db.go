@@ -69,9 +69,8 @@ func (d *db) Get(ctx context.Context, docID string, options map[string]interface
 		return nil, err
 	}
 	return &driver.Document{
-		ContentLength: int64(len(doc)),
-		Rev:           rev,
-		Body:          ioutil.NopCloser(bytes.NewReader(doc)),
+		Rev:  rev,
+		Body: ioutil.NopCloser(bytes.NewReader(doc)),
 	}, nil
 }
 
