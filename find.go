@@ -26,7 +26,7 @@ import (
 	"github.com/go-kivik/pouchdb/v4/bindings"
 )
 
-var _ driver.OptsFinder = &db{}
+var _ driver.Finder = &db{}
 
 // buildIndex merges the ddoc and name into the index structure, as reqiured
 // by the PouchDB-find plugin.
