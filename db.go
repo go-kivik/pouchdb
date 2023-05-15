@@ -145,6 +145,6 @@ func (d *db) SetSecurity(_ context.Context, _ *driver.Security) error {
 	return securityNotImplemented
 }
 
-func (d *db) Close(ctx context.Context) error {
-	return d.db.Close(ctx)
+func (d *db) Close() error {
+	return d.db.Close()
 }
