@@ -15,7 +15,6 @@ package pouchdb
 import (
 	"context"
 	"fmt"
-	"io"
 
 	"github.com/gopherjs/gopherjs/js"
 
@@ -34,13 +33,7 @@ type bulkResult struct {
 	IsError    bool   `js:"error"`
 }
 
-type bulkResults struct {
-	results *js.Object
-}
-
-var _ driver.BulkResults = &bulkResults{}
-
-func (r *bulkResults) Next(update *driver.BulkResult) (err error) {
+func (d *db) BulkDocs(ctx context.Context, docs []interface{}, options map[string]interface{}) (results []driver.BulkResult, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if e, ok := r.(error); ok {
@@ -50,29 +43,23 @@ func (r *bulkResults) Next(update *driver.BulkResult) (err error) {
 			}
 		}
 	}()
-	if r.results == js.Undefined || r.results.Length() == 0 {
-		return io.EOF
-	}
-	result := &bulkResult{}
-	result.Object = r.results.Call("shift")
-	update.ID = result.ID
-	update.Rev = result.ID
-	update.Error = nil
-	if result.IsError {
-		update.Error = &kivik.Error{Status: result.StatusCode, Message: result.Reason}
-	}
-	return nil
-}
-
-func (r *bulkResults) Close() error {
-	r.results = nil // Free up memory used by any remaining rows
-	return nil
-}
-
-func (d *db) BulkDocs(ctx context.Context, docs []interface{}, options map[string]interface{}) (driver.BulkResults, error) {
 	result, err := d.db.BulkDocs(ctx, docs, options)
 	if err != nil {
 		return nil, err
 	}
-	return &bulkResults{results: result}, nil
+	for result != js.Undefined && result.Length() > 0 {
+		r := &bulkResult{}
+		r.Object = result.Call("shift")
+		var err error
+		if r.IsError {
+			err = &kivik.Error{Status: r.StatusCode, Message: r.Reason}
+		}
+		results = append(results, driver.BulkResult{
+			ID:    r.ID,
+			Rev:   r.Rev,
+			Error: err,
+		})
+	}
+
+	return results, nil
 }

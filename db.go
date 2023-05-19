@@ -98,7 +98,8 @@ func (d *db) Put(ctx context.Context, docID string, doc interface{}, options map
 	return d.db.Put(ctx, jsDoc, options)
 }
 
-func (d *db) Delete(ctx context.Context, docID, rev string, options map[string]interface{}) (newRev string, err error) {
+func (d *db) Delete(ctx context.Context, docID string, options map[string]interface{}) (newRev string, err error) {
+	rev, _ := options["rev"].(string)
 	return d.db.Delete(ctx, docID, rev, options)
 }
 

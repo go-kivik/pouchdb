@@ -46,8 +46,8 @@ func TestChanges(t *testing.T) {
 			t.Fatalf("Failed to create db: %s", err)
 		}
 		db := client.DB(dbname)
-		changes, err := db.Changes(ctx, test.opts)
-		testy.StatusError(t, test.err, test.status, err)
+		changes := db.Changes(ctx, test.opts)
+		testy.StatusError(t, test.err, test.status, changes.Err())
 		results := []string{}
 		for changes.Next() {
 			results = append(results, changes.ID())
