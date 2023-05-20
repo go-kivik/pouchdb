@@ -44,11 +44,11 @@ github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
-github.com/go-kivik/kivik/v4 v4.0.0-20230508185852-2b883268ad9a/go.mod h1:UNIt4XnxFFNIJi0uJXBV2/BG13MP1F0QLo7x0QvwqbI=
-github.com/go-kivik/kivik/v4 v4.0.0-20230515193101-09b9118ef0d0 h1:4C7D8zcAQYfOOefscshavEMvpkl0x7zRrrL3u/gYy/o=
-github.com/go-kivik/kivik/v4 v4.0.0-20230515193101-09b9118ef0d0/go.mod h1:UNIt4XnxFFNIJi0uJXBV2/BG13MP1F0QLo7x0QvwqbI=
-github.com/go-kivik/kiviktest/v4 v4.0.0-20230508191059-50d464e4a155 h1:8Nso5H4847ItG5ae48Yy39RJS03DVsbL90d1D8DDIq0=
-github.com/go-kivik/kiviktest/v4 v4.0.0-20230508191059-50d464e4a155/go.mod h1:GNSz9NvxjBg1IdPUJ+oe+/7FW2HgHJskoopgi+hQNdM=
+github.com/go-kivik/kivik/v4 v4.0.0-20230519204432-875898671a01/go.mod h1:UNIt4XnxFFNIJi0uJXBV2/BG13MP1F0QLo7x0QvwqbI=
+github.com/go-kivik/kivik/v4 v4.0.0-20230520195323-33e57d600444 h1:rYxB+0y8eSrr/4fNT+l1I0m5hQvOHROwKznYwKjlTQU=
+github.com/go-kivik/kivik/v4 v4.0.0-20230520195323-33e57d600444/go.mod h1:UNIt4XnxFFNIJi0uJXBV2/BG13MP1F0QLo7x0QvwqbI=
+github.com/go-kivik/kiviktest/v4 v4.0.0-20230520192751-0f6ef2bb17b3 h1:EAxvB0cwnOasFBQ+oeEzjKfwCs4oRU5gWeusmX6FOW0=
+github.com/go-kivik/kiviktest/v4 v4.0.0-20230520192751-0f6ef2bb17b3/go.mod h1:YCadzW5MGwJujDFzpXjSB/Ydbkru8Nmt78xvdp2yUwU=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=

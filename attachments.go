@@ -26,7 +26,8 @@ import (
 	"github.com/go-kivik/pouchdb/v4/bindings"
 )
 
-func (d *db) PutAttachment(ctx context.Context, docID, rev string, att *driver.Attachment, _ map[string]interface{}) (newRev string, err error) {
+func (d *db) PutAttachment(ctx context.Context, docID string, att *driver.Attachment, options map[string]interface{}) (newRev string, err error) {
+	rev, _ := options["rev"].(string)
 	result, err := d.db.PutAttachment(ctx, docID, att.Filename, rev, att.Content, att.ContentType)
 	if err != nil {
 		return "", err
@@ -99,7 +100,8 @@ func (b *blobReader) Close() (err error) {
 	return nil
 }
 
-func (d *db) DeleteAttachment(ctx context.Context, docID, rev, filename string, _ map[string]interface{}) (newRev string, err error) {
+func (d *db) DeleteAttachment(ctx context.Context, docID, filename string, options map[string]interface{}) (newRev string, err error) {
+	rev, _ := options["rev"].(string)
 	result, err := d.db.RemoveAttachment(ctx, docID, filename, rev)
 	if err != nil {
 		return "", err
