@@ -122,12 +122,12 @@ func (d *db) Compact(_ context.Context) error {
 	return d.db.Compact()
 }
 
-// CompactView  is unimplemented for PouchDB.
-func (d *db) CompactView(_ context.Context, _ string) error {
+// CompactView is unimplemented for PouchDB.
+func (d *db) CompactView(context.Context, string) error {
 	return nil
 }
 
-func (d *db) ViewCleanup(_ context.Context) error {
+func (d *db) ViewCleanup(context.Context) error {
 	if atomic.LoadUint32(&d.viewCleanup) == 1 {
 		return &kivik.Error{Status: http.StatusTooManyRequests, Message: "kivik: view cleanup already running"}
 	}
@@ -138,14 +138,34 @@ func (d *db) ViewCleanup(_ context.Context) error {
 
 var securityNotImplemented = &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: security interface not supported by PouchDB"}
 
-func (d *db) Security(ctx context.Context) (*driver.Security, error) {
+func (d *db) Security(context.Context) (*driver.Security, error) {
 	return nil, securityNotImplemented
 }
 
-func (d *db) SetSecurity(_ context.Context, _ *driver.Security) error {
+func (d *db) SetSecurity(context.Context, *driver.Security) error {
 	return securityNotImplemented
 }
 
 func (d *db) Close() error {
 	return d.db.Close()
+}
+
+var _ driver.Purger = &db{}
+
+func (d *db) Purge(ctx context.Context, docRevMap map[string][]string) (*driver.PurgeResult, error) {
+	result := new(driver.PurgeResult)
+	for docID, revs := range docRevMap {
+		for _, rev := range revs {
+			delRevs, err := d.db.Purge(ctx, docID, rev)
+			if err != nil {
+				return result, err
+			}
+			if result.Purged[docID] == nil {
+				result.Purged[docID] = delRevs
+			} else {
+				result.Purged[docID] = append(result.Purged[docID], delRevs...)
+			}
+		}
+	}
+	return result, nil
 }

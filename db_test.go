@@ -46,3 +46,23 @@ func TestPut(t *testing.T) {
 	_, err = client.DB(dbname).Put(ctx, "foo", map[string]string{"_id": "bar"})
 	testy.StatusError(t, "id argument must match _id field in document", http.StatusBadRequest, err)
 }
+
+func TestPurge(t *testing.T) {
+	client, err := kivik.New("pouch", "")
+	if err != nil {
+		t.Errorf("Failed to connect to PouchDB/memdown driver: %s", err)
+		return
+	}
+	dbname := kt.TestDBName(t)
+	ctx := context.Background()
+	t.Cleanup(func() {
+		_ = client.DestroyDB(ctx, dbname)
+	})
+	if e := client.CreateDB(ctx, dbname); e != nil {
+		t.Fatalf("Failed to create db: %s", e)
+	}
+	_, err = client.DB(dbname).Purge(ctx, map[string][]string{"foo": {"1-xxx"}})
+	if err == nil {
+		t.Error("expected error, got none")
+	}
+}
