@@ -95,9 +95,9 @@ func RegisterPouchDBSuites() {
 
 		"Query/RW/group/Admin/WithDocs/UpdateSeq.skip": true,
 
-		"Version.version":        `^[67]\.\d\.\d$`,
+		"Version.version":        `^[678]\.\d\.\d$`,
 		"Version.vendor":         `^PouchDB$`,
-		"Version.vendor_version": `^[67]\.\d\.\d$`,
+		"Version.vendor_version": `^[678]\.\d\.\d$`,
 
 		"Get/RW/group/Admin/bogus.status":  http.StatusNotFound,
 		"Get/RW/group/NoAuth/bogus.status": http.StatusNotFound,
