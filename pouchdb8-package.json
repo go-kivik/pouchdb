@@ -10,6 +10,7 @@
     "devDependencies": {
         "inherits": "^2.0.3",
         "memdown": "^3.0.0",
+        "fake-indexeddb": "4.0.1",
         "pouchdb": "^8.0.0",
         "pouchdb-all-dbs": "^1.0.2",
         "pouchdb-find": "^8.0.0",

@@ -220,6 +220,9 @@ func (db *DB) Delete(ctx context.Context, docID, rev string, opts map[string]int
 // purged revisions. This method is only supported by the IndexedDB adaptor, and
 // all others return an error.
 func (db *DB) Purge(ctx context.Context, docID, rev string) ([]string, error) {
+	if db.Object.Get("purge") == js.Undefined {
+		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge supported by PouchDB 8 or newer"}
+	}
 	result, err := callBack(ctx, db, "purge", docID, rev, setTimeout(ctx, nil))
 	if err != nil {
 		return nil, err
