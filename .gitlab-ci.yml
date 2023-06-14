@@ -45,7 +45,7 @@ gopherjs1.18-pouchdb8:
 
 linter:
   stage: test
-  image: golangci/golangci-lint:v1.39
+  image: golangci/golangci-lint:v1.53.2
   script:
   - go mod download
   - golangci-lint run ./...
