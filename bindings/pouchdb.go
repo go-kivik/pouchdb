@@ -21,6 +21,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -89,6 +90,36 @@ type caller interface {
 	Call(string, ...interface{}) *js.Object
 }
 
+// prepareArgs trims any trailing nil values, since JavaScript treats null as
+// distinct from an omitted value.
+func prepareArgs(args []interface{}) []interface{} {
+	for len(args) > 0 {
+		if !omitNil(args[len(args)-1]) {
+			break
+		}
+		args = args[:len(args)-1]
+	}
+	return args
+}
+
+// omitNil returns true if a is a nil value that should be omitted as an
+// argument to a JavaScript function.
+func omitNil(a interface{}) bool {
+	if a == nil {
+		// a literal nil value should be converted to a null, so we don't omit
+		return false
+	}
+	v := reflect.ValueOf(a)
+	switch v.Kind() {
+	case reflect.Slice, reflect.Interface, reflect.Map, reflect.Pointer:
+		// nil slices, interfaces, maps, and pointers in our context mean that
+		// we have a nil option that in JS idioms would just be omitted as an
+		// argument, so return true.
+		return v.IsNil()
+	}
+	return false
+}
+
 // callBack executes the 'method' of 'o' as a callback, setting result to the
 // callback's return value. An error is returned if either the callback returns
 // an error, or if the context is cancelled. No attempt is made to abort the
@@ -97,7 +128,7 @@ func callBack(ctx context.Context, o caller, method string, args ...interface{})
 	defer RecoverError(&e)
 	resultCh := make(chan *js.Object)
 	var err error
-	o.Call(method, args...).Call("then", func(r *js.Object) {
+	o.Call(method, prepareArgs(args)...).Call("then", func(r *js.Object) {
 		go func() { resultCh <- r }()
 	}).Call("catch", func(e *js.Object) {
 		err = NewPouchError(e)

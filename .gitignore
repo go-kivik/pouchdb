@@ -5,3 +5,5 @@ package-lock.json
 test.*
 *~
 glide.lock
+build/
+package.json
