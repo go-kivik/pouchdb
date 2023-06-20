@@ -26,17 +26,6 @@ import (
 	_ "github.com/go-kivik/pouchdb/v4" // PouchDB driver we're testing
 )
 
-func init() {
-	js.Global.Call("require", "fake-indexeddb/auto")
-	indexedDBPlugin := js.Global.Call("require", "pouchdb-adapter-indexeddb")
-	pouchDB := js.Global.Get("PouchDB")
-	pouchDB.Call("plugin", indexedDBPlugin)
-	idbPouch := pouchDB.Call("defaults", map[string]interface{}{
-		"adapter": "indexeddb",
-	})
-	js.Global.Set("PouchDB", idbPouch)
-}
-
 func TestPurge(t *testing.T) {
 	client, err := kivik.New("pouch", "")
 	if err != nil {
@@ -45,11 +34,20 @@ func TestPurge(t *testing.T) {
 	}
 	v, _ := client.Version(context.Background())
 	pouchVer := v.Version
+	if strings.HasPrefix(pouchVer, "7.") {
+		t.Skipf("Skipping PouchDB 8 test for PouchDB %v", pouchVer)
+	}
+
+	js.Global.Call("require", "fake-indexeddb/auto")
+	indexedDBPlugin := js.Global.Call("require", "pouchdb-adapter-indexeddb")
+	pouchDB := js.Global.Get("PouchDB")
+	pouchDB.Call("plugin", indexedDBPlugin)
+	idbPouch := pouchDB.Call("defaults", map[string]interface{}{
+		"adapter": "indexeddb",
+	})
+	js.Global.Set("PouchDB", idbPouch)
 
 	t.Run("not found", func(t *testing.T) {
-		if strings.HasPrefix(pouchVer, "7.") {
-			t.Skipf("Skipping PouchDB 8 test for PouchDB %v", pouchVer)
-		}
 		const wantErr = "not_found: missing"
 		client, err := kivik.New("pouch", "")
 		if err != nil {
@@ -70,9 +68,6 @@ func TestPurge(t *testing.T) {
 		}
 	})
 	t.Run("success", func(t *testing.T) {
-		if strings.HasPrefix(pouchVer, "7.") {
-			t.Skipf("Skipping PouchDB 8 test for PouchDB %v", pouchVer)
-		}
 		client, err := kivik.New("pouch", "")
 		if err != nil {
 			t.Errorf("Failed to connect to PouchDB/memdown driver: %s", err)
