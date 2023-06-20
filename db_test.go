@@ -88,7 +88,7 @@ func TestPurge(t *testing.T) {
 		if strings.HasPrefix(pouchVer, "7.") {
 			t.Skipf("Skipping PouchDB 8 test for PouchDB %v", pouchVer)
 		}
-		const wantErr = "xxx"
+		const wantErr = "kivik: purge only supported with indexedDB adapter"
 		client, err := kivik.New("pouch", "")
 		if err != nil {
 			t.Errorf("Failed to connect to PouchDB/memdown driver: %s", err)

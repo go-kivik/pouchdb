@@ -223,6 +223,9 @@ func (db *DB) Purge(ctx context.Context, docID, rev string) ([]string, error) {
 	if db.Object.Get("purge") == js.Undefined {
 		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge supported by PouchDB 8 or newer"}
 	}
+	if db.Object.Get("__opts").Get("adapter").String() != "indexeddb" {
+		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge only supported with indexedDB adapter"}
+	}
 	result, err := callBack(ctx, db, "purge", docID, rev, setTimeout(ctx, nil))
 	if err != nil {
 		return nil, err
