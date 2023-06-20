@@ -216,6 +216,28 @@ func (db *DB) Delete(ctx context.Context, docID, rev string, opts map[string]int
 	return result.Get("rev").String(), nil
 }
 
+// Purge purges a specific document revision. It returns a list of successfully
+// purged revisions. This method is only supported by the IndexedDB adaptor, and
+// all others return an error.
+func (db *DB) Purge(ctx context.Context, docID, rev string) ([]string, error) {
+	if db.Object.Get("purge") == js.Undefined {
+		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge supported by PouchDB 8 or newer"}
+	}
+	if db.Object.Get("__opts").Get("adapter").String() != "indexeddb" {
+		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge only supported with indexedDB adapter"}
+	}
+	result, err := callBack(ctx, db, "purge", docID, rev, setTimeout(ctx, nil))
+	if err != nil {
+		return nil, err
+	}
+	delRevs := result.Get("deletedRevs")
+	revs := make([]string, delRevs.Length())
+	for i := range revs {
+		revs[i] = delRevs.Index(i).String()
+	}
+	return revs, nil
+}
+
 // Destroy destroys the database.
 func (db *DB) Destroy(ctx context.Context, options map[string]interface{}) error {
 	_, err := callBack(ctx, db, "destroy", setTimeout(ctx, options))
