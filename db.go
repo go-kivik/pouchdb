@@ -154,7 +154,9 @@ func (d *db) Close() error {
 var _ driver.Purger = &db{}
 
 func (d *db) Purge(ctx context.Context, docRevMap map[string][]string) (*driver.PurgeResult, error) {
-	result := new(driver.PurgeResult)
+	result := &driver.PurgeResult{
+		Purged: make(map[string][]string, len(docRevMap)),
+	}
 	for docID, revs := range docRevMap {
 		for _, rev := range revs {
 			/* Probable GopherJS bug. Without blocking here, we get the following
