@@ -55,7 +55,26 @@ func Defaults(options map[string]interface{}) *PouchDB {
 //
 // See https://pouchdb.com/api.html#create_database
 func (p *PouchDB) New(dbName string, options map[string]interface{}) *DB {
-	return &DB{Object: p.Object.New(dbName, options)}
+	db := &DB{Object: p.Object.New(dbName, options)}
+	if db.indexeddb() {
+		/* Without blocking here, we get the following error. This may be related
+			to a sleep in PouchDB, that has a mysterious note about why it exists.
+			https://github.com/pouchdb/pouchdb/blob/27ab3b27a6673038b449313d9700b3a7977ac091/packages/node_modules/pouchdb-adapter-indexeddb/src/index.js#L156-L160
+
+		/home/jonhall/src/kivik/pouchdb/node_modules/pouchdb-adapter-indexeddb/lib/index.js:1597
+			doc.rev_tree = pouchdbMerge.removeLeafFromTree(doc.rev_tree, rev);
+																^
+		TypeError: Cannot read properties of undefined (reading 'rev_tree')
+			at FDBRequest.docStore.get.onsuccess (/home/jonhall/src/kivik/pouchdb/node_modules/pouchdb-adapter-indexeddb/lib/index.js:1597:58)
+			at invokeEventListeners (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/lib/FakeEventTarget.js:55:25)
+			at FDBRequest.dispatchEvent (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/lib/FakeEventTarget.js:99:7)
+			at FDBTransaction._start (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/FDBTransaction.js:210:19)
+			at Immediate.<anonymous> (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/lib/Database.js:38:16)
+			at processImmediate (node:internal/timers:466:21)
+		*/
+		time.Sleep(0)
+	}
+	return db
 }
 
 // Version returns the version of the currently running PouchDB library.
@@ -216,6 +235,10 @@ func (db *DB) Delete(ctx context.Context, docID, rev string, opts map[string]int
 	return result.Get("rev").String(), nil
 }
 
+func (db *DB) indexeddb() bool {
+	return db.Object.Get("__opts").Get("adapter").String() == "indexeddb"
+}
+
 // Purge purges a specific document revision. It returns a list of successfully
 // purged revisions. This method is only supported by the IndexedDB adaptor, and
 // all others return an error.
@@ -223,7 +246,7 @@ func (db *DB) Purge(ctx context.Context, docID, rev string) ([]string, error) {
 	if db.Object.Get("purge") == js.Undefined {
 		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge supported by PouchDB 8 or newer"}
 	}
-	if db.Object.Get("__opts").Get("adapter").String() != "indexeddb" {
+	if !db.indexeddb() {
 		return nil, &kivik.Error{Status: http.StatusNotImplemented, Message: "kivik: purge only supported with indexedDB adapter"}
 	}
 	result, err := callBack(ctx, db, "purge", docID, rev, setTimeout(ctx, nil))
