@@ -19,7 +19,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"sync/atomic"
-	"time"
 
 	"github.com/gopherjs/gopherjs/js"
 
@@ -159,21 +158,6 @@ func (d *db) Purge(ctx context.Context, docRevMap map[string][]string) (*driver.
 	}
 	for docID, revs := range docRevMap {
 		for _, rev := range revs {
-			/* Probable GopherJS bug. Without blocking here, we get the following
-			   error:
-
-				/home/jonhall/src/kivik/pouchdb/node_modules/pouchdb-adapter-indexeddb/lib/index.js:1597
-					doc.rev_tree = pouchdbMerge.removeLeafFromTree(doc.rev_tree, rev);
-																		^
-				TypeError: Cannot read properties of undefined (reading 'rev_tree')
-					at FDBRequest.docStore.get.onsuccess (/home/jonhall/src/kivik/pouchdb/node_modules/pouchdb-adapter-indexeddb/lib/index.js:1597:58)
-					at invokeEventListeners (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/lib/FakeEventTarget.js:55:25)
-					at FDBRequest.dispatchEvent (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/lib/FakeEventTarget.js:99:7)
-					at FDBTransaction._start (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/FDBTransaction.js:210:19)
-					at Immediate.<anonymous> (/home/jonhall/src/kivik/pouchdb/node_modules/fake-indexeddb/build/cjs/lib/Database.js:38:16)
-					at processImmediate (node:internal/timers:466:21)
-			*/
-			time.Sleep(0)
 			delRevs, err := d.db.Purge(ctx, docID, rev)
 			if err != nil {
 				return result, err
