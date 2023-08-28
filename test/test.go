@@ -23,8 +23,8 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 
 	kivik "github.com/go-kivik/kivik/v4"
-	kiviktest "github.com/go-kivik/kiviktest/v4"
-	"github.com/go-kivik/kiviktest/v4/kt"
+	"github.com/go-kivik/kivik/v4/kiviktest"
+	"github.com/go-kivik/kivik/v4/kiviktest/kt"
 )
 
 func init() {
@@ -372,11 +372,12 @@ func PouchLocalTest(t *testing.T) {
 	clients := &kt.Context{
 		RW:    true,
 		Admin: client,
+		T:     t,
 	}
-	kiviktest.RunTestsInternal(clients, kiviktest.SuitePouchLocal, t)
+	kiviktest.RunTestsInternal(clients, kiviktest.SuitePouchLocal)
 }
 
 // PouchRemoteTest runs the PouchDB tests against a remote CouchDB database.
 func PouchRemoteTest(t *testing.T) {
-	kiviktest.DoTest(kiviktest.SuitePouchRemote, "KIVIK_TEST_DSN_COUCH22", t)
+	kiviktest.DoTest(t, kiviktest.SuitePouchRemote, "KIVIK_TEST_DSN_COUCH22")
 }
