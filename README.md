@@ -1,3 +1,7 @@
+This code has moved to [github.com/go-kivik/kivik/v4/pouchdb](https://github.com/go-kivik/kivik/tree/master/pouchdb).
+
+<hr>
+
 [![Build Status](https://travis-ci.org/go-kivik/pouchdb.svg?branch=master)](https://travis-ci.org/go-kivik/pouchdb)  [![GoDoc](https://godoc.org/github.com/go-kivik/pouchdb?status.svg)](http://godoc.org/github.com/go-kivik/pouchdb)
 
 # Kivik PouchDB
