@@ -1,3 +1,4 @@
+// Deprecated: Use [github.com/go-kivik/kivik/v4/couchdb] instead.
 module github.com/go-kivik/pouchdb/v4
 
 go 1.16
